@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
                 Button button = (Button) view;
                 CharSequence text = button.getText();
                 Toast.makeText(getApplicationContext(), button.getText(), Toast.LENGTH_SHORT).show();
-                Log.d("text", text + "!");
+                Log.d("text", text + "!!!!");
             }
         };
 
