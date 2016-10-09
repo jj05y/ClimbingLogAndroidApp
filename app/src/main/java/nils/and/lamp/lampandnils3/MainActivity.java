@@ -1,5 +1,8 @@
 package nils.and.lamp.lampandnils3;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
@@ -7,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,8 +21,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Vector;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, JoeFrag.OnFragmentInteractionListener, NilsFrag.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, JoeFrag.OnFragmentInteractionListener, NilsFrag.OnFragmentInteractionListener, IClimbingApp {
+
+    private ClimbDataBaseHandler dataBaseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +35,28 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        if (dataBaseHandler == null) {
+            dataBaseHandler = new ClimbDataBaseHandler(this);
+        }
+
+        if (dataBaseHandler.isEmpty()) {
+
+            Drawable climb1 = getDrawable(R.drawable.climb1);
+            Drawable climb2 = getDrawable(R.drawable.climb2);
+            Drawable climb3 = getDrawable(R.drawable.climb3);
+            dataBaseHandler.addClimb("Street Fighter", "4c", "12","fab", climb1);
+            dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "20","super fab",climb2);
+            dataBaseHandler.addClimb("Graham Crackers", "5a", "22","super fab",climb3);
+            dataBaseHandler.addClimb("Paradise Lost", "4a", "17","super super fab",climb3);
+            dataBaseHandler.addClimb("Stereo-Tentacles", "5a", "14","super super super fab",climb3);
+            Log.d("DB", "added some climbs");
+
+
+        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.openDrawer(Gravity.LEFT);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -136,4 +156,10 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
         Log.d("FRAG", "boop");
     }
+
+    @Override
+    public ClimbDataBaseHandler getDatabase() {
+        return dataBaseHandler;
+    }
 }
+

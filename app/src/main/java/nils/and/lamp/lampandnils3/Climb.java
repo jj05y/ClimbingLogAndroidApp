@@ -65,4 +65,14 @@ public class Climb {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "Climb{" +
+                ", name='" + name + '\'' +
+                ", grade='" + grade + '\'' +
+                ", length='" + length + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
