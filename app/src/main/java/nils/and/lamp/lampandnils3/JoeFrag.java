@@ -1,31 +1,25 @@
 package nils.and.lamp.lampandnils3;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ListViewAutoScrollHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.Vector;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link JoeFrag.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link JoeFrag#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class JoeFrag extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -33,46 +27,41 @@ public class JoeFrag extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment JoeFrag.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static JoeFrag newInstance(String param1, String param2) {
-        JoeFrag fragment = new JoeFrag();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_joe, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_joe, container, false);
+        Log.d("FRAG", rootView +"");
+        ListView climbsList = (ListView) rootView.findViewById(R.id.listview_climbs);
+
+
+        Drawable climb1 = getActivity().getDrawable(R.drawable.climb1);
+        Drawable climb2 = getActivity().getDrawable(R.drawable.climb2);
+        Drawable climb3 = getActivity().getDrawable(R.drawable.climb3);
+        Vector<Climb> climbs = new Vector<>();
+        climbs.add(new Climb(climb1, "climb1", "4a", "40","fab"));
+        climbs.add(new Climb(climb2, "climb2", "5a", "40" ,"suhper fab"));
+        climbs.add(new Climb(climb3, "climb3", "4a", "40","fab"));
+        climbs.add(new Climb(climb2, "climb2", "5a", "40" ,"suhper fab"));
+        climbs.add(new Climb(climb1, "climb1", "4a", "40","fab"));
+        climbs.add(new Climb(climb3, "climb3", "5a", "40" ,"suhper fab"));
+        climbs.add(new Climb(climb1, "climb1", "4a", "40","fab"));
+        climbs.add(new Climb(climb2, "climb2", "5a", "40" ,"suhper fab"));
+
+
+        Log.d("FRAG", climbsList +"");
+        climbsList.setAdapter(new ClimbListAdapter(climbs, getActivity()));
+
+        return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
