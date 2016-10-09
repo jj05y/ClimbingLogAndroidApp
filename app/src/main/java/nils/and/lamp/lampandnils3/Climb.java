@@ -1,6 +1,7 @@
 package nils.and.lamp.lampandnils3;
 
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
 /**
  * Created by joe on 09/10/16.
@@ -8,13 +9,13 @@ import android.graphics.drawable.BitmapDrawable;
 
 public class Climb {
 
-    private BitmapDrawable photo;
+    private Drawable photo;
     private String name;
     private String grade;
     private String length;
     private String description;
 
-    public Climb(BitmapDrawable photo, String name, String grade, String length, String description) {
+    public Climb(Drawable photo, String name, String grade, String length, String description) {
         this.photo = photo;
         this.name = name;
         this.grade = grade;
@@ -25,11 +26,11 @@ public class Climb {
     public Climb() {
     }
 
-    public BitmapDrawable getPhoto() {
+    public Drawable getPhoto() {
         return photo;
     }
 
-    public void setPhoto(BitmapDrawable photo) {
+    public void setPhoto(Drawable photo) {
         this.photo = photo;
     }
 

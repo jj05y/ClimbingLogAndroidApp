@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
 
@@ -57,8 +58,14 @@ public class ClimbListAdapter extends BaseAdapter {
         TextView textLength = (TextView) myInflatedView.findViewById(R.id.textView_length);
         TextView textGrade = (TextView) myInflatedView.findViewById(R.id.textView_grade);
         TextView textDescription = (TextView) myInflatedView.findViewById(R.id.textView_description);
+        ImageView image = (ImageView) myInflatedView.findViewById(R.id.imageView_climb);
 
 
+        textName.setText(climbs.get(i).getName());
+        textLength.setText(climbs.get(i).getLength());
+        textGrade.setText(climbs.get(i).getGrade());
+        textDescription.setText(climbs.get(i).getDescription());
+        image.setImageDrawable(climbs.get(i).getPhoto());
 
         return myInflatedView;
     }
