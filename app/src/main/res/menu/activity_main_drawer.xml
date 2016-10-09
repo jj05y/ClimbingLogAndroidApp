@@ -3,24 +3,21 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_joe"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Joe" />
+            android:id="@+id/nav_create"
+            android:icon="@drawable/create"
+            android:title="Create A Climb" />
         <item
-            android:id="@+id/nav_nils"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Nils" />
+            android:id="@+id/nav_browse"
+            android:icon="@drawable/browse"
+            android:title="Browse Climbs" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+        android:id="@+id/nav_search"
+        android:icon="@drawable/search"
+        android:title="Search Climbs Online" />
+
     </group>
 
-    <item android:title="Communicate">
+<!--    <item android:title="Communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
@@ -31,6 +28,6 @@
                 android:icon="@drawable/ic_menu_send"
                 android:title="Send" />
         </menu>
-    </item>
+    </item>-->
 
 </menu>
