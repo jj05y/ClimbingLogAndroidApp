@@ -11,10 +11,10 @@ public class Climb {
     private BitmapDrawable photo;
     private String name;
     private String grade;
-    private String length;
+    private int length;
     private String description;
 
-    public Climb(BitmapDrawable photo, String name, String grade, String length, String description) {
+    public Climb(BitmapDrawable photo, String name, String grade, int length, String description) {
         this.photo = photo;
         this.name = name;
         this.grade = grade;
@@ -49,11 +49,11 @@ public class Climb {
         this.grade = grade;
     }
 
-    public String getLength() {
+    public int getLength() {
         return length;
     }
 
-    public void setLength(String length) {
+    public void setLength(int length) {
         this.length = length;
     }
 
