@@ -12,4 +12,11 @@
 
     <string name="log_title">title placeholder</string>
     <string name="log_desc">desc placeholder</string>
+
+    <string name="label_grade">Grade</string>
+    <string name="label_length">Length</string>
+    <string name="button_text_commit">Commit</string>
+    <string name="button_text_reset">Reset</string>
+    <string name="label_title">Title</string>
+    <string name="label_desc">Description</string>
 </resources>

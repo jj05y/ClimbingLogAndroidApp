@@ -95,7 +95,6 @@ public class NilsFrag extends Fragment {
             }
         });
 
-        
 
         return rootView;
     }

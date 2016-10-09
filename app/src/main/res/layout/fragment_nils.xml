@@ -27,10 +27,20 @@
         tools:text="@string/log_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textColor="@color/colorPrimaryDark" />
+
+    <TextView
+        android:layout_width="@dimen/createlog_button_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/createlog_image"
+        android:id="@+id/createlog_label_title"
+        android:text="@string/label_title"
+        style="?android:attr/textAppearance" />
+
     <android.support.v7.widget.AppCompatEditText
         android:layout_width="match_parent"
         android:layout_height="@dimen/createlog_title_height"
         android:layout_below="@id/createlog_image"
+        android:layout_toEndOf="@id/createlog_label_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:layout_marginLeft="@dimen/md_keylines"
         android:layout_marginTop="@dimen/md_keylines"
@@ -40,11 +50,54 @@
         tools:text="@string/log_title"
         android:id="@+id/createlog_title"
         />
+    <TextView
+        android:layout_width="@dimen/createlog_button_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/createlog_title"
+        android:id="@+id/createlog_label_grade"
+        android:text="@string/label_grade"
+        style="?android:attr/textAppearance" />
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/createlog_title_height"
+        android:layout_alignParentEnd="@+id/createlog_title"
+        android:layout_toEndOf="@id/createlog_title"
+        android:id="@+id/createlog_grade"
+        android:layout_below="@id/createlog_title"
+        tools:listitem="@layout/support_simple_spinner_dropdown_item" />
+
+    <TextView
+        android:layout_width="@dimen/createlog_button_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/createlog_grade"
+        android:text="@string/label_length"
+        android:id="@+id/createlog_label_length"
+        style="?android:attr/textAppearance"/>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/createlog_title_height"
+        android:layout_alignParentEnd="@+id/createlog_title"
+        android:layout_toEndOf="@id/createlog_label_length"
+        android:id="@+id/createlog_length"
+        android:layout_below="@id/createlog_grade"
+        tools:listitem="@layout/support_simple_spinner_dropdown_item" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/createlog_length"
+        android:id="@+id/createlog_label_text"
+        android:text="@string/label_desc"
+        style="?android:attr/textAppearance" />
+
     <android.support.v7.widget.AppCompatEditText
-        android:id="@+id/createlog_text"
+        android:id="@+id/createlog_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/createlog_title"
+        android:layout_below="@id/createlog_length"
+        android:layout_toEndOf="@id/createlog_label_length"
         android:layout_marginLeft="@dimen/md_keylines"
         android:layout_marginTop="@dimen/md_keylines"
         android:layout_marginBottom="@dimen/md_keylines"
@@ -58,20 +111,20 @@
         android:id="@+id/createlog_commit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/createlog_text"
+        android:layout_below="@+id/createlog_desc"
         style="?android:attr/borderlessButtonStyle"
         android:textColor="?attr/colorPrimary"
-        android:text="Commit" />
+        android:text="@string/button_text_commit" />
 
     <Button
         android:id="@+id/createlog_reset_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/createlog_text"
+        android:layout_below="@+id/createlog_desc"
         style="?android:attr/borderlessButtonStyle"
         android:layout_toRightOf="@id/createlog_commit_button"
         android:textColor="?attr/colorAccent"
-        android:text="Reset" />
+        android:text="@string/button_text_reset" />
 </RelativeLayout>
 
 </FrameLayout>
