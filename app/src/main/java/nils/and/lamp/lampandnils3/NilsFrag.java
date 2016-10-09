@@ -139,6 +139,10 @@ public class NilsFrag extends Fragment {
                                 switch (which) {
                                     case 1:
                                         File pants = getTempCaptureFile();
+                                        if (pants == null) {
+                                            Log.e(TAG,"sorry m8, no write permission, no camera");
+                                            break;
+                                        }
                                         tempFileName = pants.getAbsolutePath();
                                         Uri uri = Uri.fromFile(pants);
                                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -200,6 +204,7 @@ public class NilsFrag extends Fragment {
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
                 Log.e(TAG, "wtf, I thought you got permission?");
+                return null;
             }
         }
         String tempFilename = "capture"
