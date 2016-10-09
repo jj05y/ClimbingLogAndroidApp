@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pick_image_options" >
+        <item>@string/pick_image_options_gallery</item>
+        <item>@string/pick_image_options_camera</item>
+    </string-array>
+    <string name="pick_image_options_gallery">From Phone\'s Gallery</string>
+    <string name="pick_image_options_camera">From Camera App</string>
+</resources>

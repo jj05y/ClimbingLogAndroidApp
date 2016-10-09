@@ -20,5 +20,6 @@
         </activity>
         <activity android:name=".ClimbDetailView"></activity>
     </application>
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- this line is future proof -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>

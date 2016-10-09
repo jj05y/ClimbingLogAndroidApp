@@ -23,4 +23,6 @@
     <string name="button_text_reset">Reset</string>
     <string name="label_title">Title</string>
     <string name="label_desc">Description</string>
+    <string name="pick_image">Image: Pick or Capture</string>
+    <string name="cameraCaptureTempFilename">cameraCaptureTempFilename</string>
 </resources>
