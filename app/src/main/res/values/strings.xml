@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">LampAndNils3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_joe_fragment">Hello Joe fragment</string>
+    <string name="hello_nils_fragment">Hello Nils fragment</string>
+</resources>
