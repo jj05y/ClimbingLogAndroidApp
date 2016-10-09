@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 
@@ -35,7 +36,8 @@ public class NilsFrag extends Fragment {
 
     private TextView readonlyTitle;
     private AppCompatEditText editTitle;
-
+    private Button resetAll;
+    private AppCompatEditText editDesc;
 
 
     public NilsFrag() {
@@ -95,6 +97,17 @@ public class NilsFrag extends Fragment {
             }
         });
 
+        // desc field
+        editDesc = (AppCompatEditText) rootView.findViewById(R.id.createlog_desc);
+        // reset button
+        resetAll = (Button) rootView.findViewById(R.id.createlog_reset_button);
+        resetAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editTitle.setText("");
+                editDesc.setText("");
+            }
+        });
 
         return rootView;
     }
