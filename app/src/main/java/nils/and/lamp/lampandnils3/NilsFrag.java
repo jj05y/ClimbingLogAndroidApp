@@ -4,9 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatEditText;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -28,6 +32,11 @@ public class NilsFrag extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private TextView readonlyTitle;
+    private AppCompatEditText editTitle;
+
+
 
     public NilsFrag() {
         // Required empty public constructor
@@ -64,7 +73,31 @@ public class NilsFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_nils, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_nils, container, false);
+        readonlyTitle = (TextView) rootView.findViewById(R.id.createlog_title_viewonly);
+        editTitle = (AppCompatEditText) rootView.findViewById(R.id.createlog_title);
+
+        // editTitle content will update the colorful readonly title
+        editTitle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                readonlyTitle.setText(editable.toString());
+            }
+        });
+
+        
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
