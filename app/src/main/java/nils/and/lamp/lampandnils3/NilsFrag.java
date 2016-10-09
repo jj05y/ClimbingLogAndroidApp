@@ -21,7 +21,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -221,13 +220,9 @@ public class NilsFrag extends Fragment {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeFile(strings[0], options);
-            int imageHeight = options.outHeight;
-            int imageWidth = options.outWidth;
-            String imageType = options.outMimeType;
-            int inSampleSize = calculateInSampleSize(options, 400, 640);
-            options.inSampleSize = inSampleSize;
+            options.inSampleSize = calculateInSampleSize(options, 400, 640);
             options.inJustDecodeBounds = false;
-            return BitmapFactory.decodeFile(strings[0],options);
+            return BitmapFactory.decodeFile(strings[0], options);
         }
 
         @Override
@@ -237,7 +232,7 @@ public class NilsFrag extends Fragment {
             img.setImageBitmap(bitmap);
         }
 
-        protected int calculateInSampleSize(
+        int calculateInSampleSize(
                 BitmapFactory.Options options, int reqWidth, int reqHeight) {
             // Raw height and width of image
             final int height = options.outHeight;
