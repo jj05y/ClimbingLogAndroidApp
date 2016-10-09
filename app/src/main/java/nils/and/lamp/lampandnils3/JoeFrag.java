@@ -38,10 +38,10 @@ public class JoeFrag extends Fragment {
         ListView climbsList = (ListView) getActivity().findViewById(R.id.listview_climbs);
 
         Vector<Climb> climbs = new Vector<>();
-        climbs.add(new Climb(null, "climb1", "4a", 40,"fab"));
-        climbs.add(new Climb(null, "climb2", "5a", 40,"suhper fab"));
+        climbs.add(new Climb(null, "climb1", "4a", "40","fab"));
+        climbs.add(new Climb(null, "climb2", "5a", "40" ,"suhper fab"));
 
-        climbsList.setAdapter(new ClimbListAdapter(climbs));
+        climbsList.setAdapter(new ClimbListAdapter(climbs, getActivity()));
 
         return rootView;
     }
