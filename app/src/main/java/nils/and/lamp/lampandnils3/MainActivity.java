@@ -1,17 +1,12 @@
 package nils.and.lamp.lampandnils3;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,8 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.Vector;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, JoeFrag.OnFragmentInteractionListener, NilsFrag.OnFragmentInteractionListener, IClimbingApp {
@@ -104,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_joe) {
+        if (id == R.id.nav_browse) {
             // Handle the joe action
             // Create a new fragment and specify the planet to show based on position
             Fragment fragment = new JoeFrag();
@@ -120,7 +114,7 @@ public class MainActivity extends AppCompatActivity
           //  mDrawerList.setItemChecked(position, true);
          //   setTitle(mPlanetTitles[position]);
          //   mDrawerLayout.closeDrawer(mDrawerList);
-        } else if (id == R.id.nav_nils) {
+        } else if (id == R.id.nav_create) {
             // Handle the joe action
             // Create a new fragment and specify the planet to show based on position
             Fragment fragment = new NilsFrag();
@@ -137,13 +131,12 @@ public class MainActivity extends AppCompatActivity
             //   setTitle(mPlanetTitles[position]);
             //   mDrawerLayout.closeDrawer(mDrawerList);
 
-        } else if (id == R.id.nav_slideshow) {
+     /*   } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_send) {*/
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_search) {
+            Toast.makeText(this, "You gotta be kidding me", Toast.LENGTH_SHORT).show();
 
         }
 
