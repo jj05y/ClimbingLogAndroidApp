@@ -184,11 +184,11 @@ public class NilsFrag extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 String str = editable.toString();
-                if (str.contains("\n")){
-                    str = str.replace("\n", "");
+                if (str.contains("\n")) {
+                    str = str.replace("\n", " ");
                     editTitle.setText(str);
                 }
-                Selection.setSelection(editTitle.getText(),str.length());
+                Selection.setSelection(editTitle.getText(), str.length());
                 readonlyTitle.setText(str);
             }
         });
@@ -209,11 +209,11 @@ public class NilsFrag extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 String str = editable.toString();
-                if (str.contains("\n")){
-                    str = str.replace("\n", "");
+                if (str.contains("\n")) {
+                    str = str.replace("\n", " ");
                     editDesc.setText(str);
                 }
-                Selection.setSelection(editDesc.getText(),str.length());
+                Selection.setSelection(editDesc.getText(), str.length());
             }
         });
 
