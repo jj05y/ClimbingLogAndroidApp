@@ -9,4 +9,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_joe_fragment">Hello Joe fragment</string>
     <string name="hello_nils_fragment">Hello Nils fragment</string>
+
+    <string name="log_title">title placeholder</string>
+    <string name="log_desc">desc placeholder</string>
 </resources>

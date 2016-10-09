@@ -1,13 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nils.and.lamp.lampandnils3.JoeFrag">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:foreground="?attr/selectableItemBackground"
+    tools:context="nils.and.lamp.lampandnils3.NilsFrag">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/createlog_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_nils_fragment" />
+        android:layout_height="@dimen/createlog_image_height"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/placeholder"
+        android:src="@drawable/placeholder"
+        />
+
+    <TextView
+        android:id="@+id/createlog_title_viewonly"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/createlog_title_height"
+        android:layout_alignBottom="@+id/createlog_image"
+        android:layout_marginLeft="@dimen/md_keylines"
+        tools:text="@string/log_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/white" />
+    <android.support.v7.widget.AppCompatEditText
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/createlog_title_height"
+        android:layout_below="@id/createlog_image"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:layout_marginLeft="@dimen/md_keylines"
+        android:layout_marginTop="@dimen/md_keylines"
+        android:layout_marginBottom="@dimen/md_keylines"
+        android:layout_marginRight="@dimen/md_keylines"
+        android:textColor="@color/dark_grey"
+        tools:text="@string/log_title"
+        android:id="@+id/createlog_title"
+        />
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/createlog_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createlog_title"
+        android:layout_marginLeft="@dimen/md_keylines"
+        android:layout_marginTop="@dimen/md_keylines"
+        android:layout_marginBottom="@dimen/md_keylines"
+        android:layout_marginRight="@dimen/md_keylines"
+        tools:text="@string/log_desc"
+        android:ellipsize="end"
+        android:textColor="@color/dark_grey"
+        android:textSize="@dimen/article_subheading" />
+
+    <Button
+        android:id="@+id/createlog_commit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createlog_text"
+        style="?android:attr/borderlessButtonStyle"
+        android:textColor="?attr/colorPrimary"
+        android:text="Commit" />
+
+    <Button
+        android:id="@+id/createlog_reset_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createlog_text"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_toRightOf="@id/createlog_commit_button"
+        android:textColor="?attr/colorAccent"
+        android:text="Reset" />
+</RelativeLayout>
 
 </FrameLayout>

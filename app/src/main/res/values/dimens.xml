@@ -6,4 +6,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="createlog_image_height">200dp</dimen>
+    <dimen name="createlog_title_height">40dp</dimen>
+    <dimen name="md_keylines">16dp</dimen>
+    <dimen name="article_subheading">16sp</dimen>
+    <dimen name="createlog_button_width">48dp</dimen>
+    <dimen name="createlog_button_height">48dp</dimen>
 </resources>
