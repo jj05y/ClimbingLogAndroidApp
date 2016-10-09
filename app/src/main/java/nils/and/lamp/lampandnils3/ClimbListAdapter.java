@@ -65,8 +65,12 @@ public class ClimbListAdapter extends BaseAdapter {
         textLength.setText(climbs.get(i).getLength());
         textGrade.setText(climbs.get(i).getGrade());
         textDescription.setText(climbs.get(i).getDescription());
-        image.setImageDrawable(climbs.get(i).getPhoto());
+        if (climbs.get(i).getPhoto()!= null) image.setImageDrawable(climbs.get(i).getPhoto());
 
         return myInflatedView;
+    }
+
+    public Vector<Climb> getClimbs() {
+        return climbs;
     }
 }

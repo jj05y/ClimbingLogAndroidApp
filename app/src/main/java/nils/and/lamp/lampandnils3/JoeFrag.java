@@ -1,20 +1,18 @@
 package nils.and.lamp.lampandnils3;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 
@@ -41,23 +39,22 @@ public class JoeFrag extends Fragment {
         Log.d("FRAG", rootView +"");
         ListView climbsList = (ListView) rootView.findViewById(R.id.listview_climbs);
 
-
-        Drawable climb1 = getActivity().getDrawable(R.drawable.climb1);
-        Drawable climb2 = getActivity().getDrawable(R.drawable.climb2);
-        Drawable climb3 = getActivity().getDrawable(R.drawable.climb3);
-        Vector<Climb> climbs = new Vector<>();
-        climbs.add(new Climb(climb1, "climb1", "4a", "40","fab"));
-        climbs.add(new Climb(climb2, "climb2", "5a", "40" ,"suhper fab"));
-        climbs.add(new Climb(climb3, "climb3", "4a", "40","fab"));
-        climbs.add(new Climb(climb2, "climb2", "5a", "40" ,"suhper fab"));
-        climbs.add(new Climb(climb1, "climb1", "4a", "40","fab"));
-        climbs.add(new Climb(climb3, "climb3", "5a", "40" ,"suhper fab"));
-        climbs.add(new Climb(climb1, "climb1", "4a", "40","fab"));
-        climbs.add(new Climb(climb2, "climb2", "5a", "40" ,"suhper fab"));
+        Vector<Climb> climbs = ((IClimbingApp) getActivity()).getDatabase().getClimbs();
 
 
         Log.d("FRAG", climbsList +"");
         climbsList.setAdapter(new ClimbListAdapter(climbs, getActivity()));
+        climbsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Climb climb = ((ClimbListAdapter) adapterView.getAdapter()).getClimbs().get(i);
+                Log.d("FRAG", climb.getName() );
+                Intent intent = new Intent(getActivity(), ClimbDetailView.class);
+
+                intent.putExtra("ClimbIndex", i);
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }

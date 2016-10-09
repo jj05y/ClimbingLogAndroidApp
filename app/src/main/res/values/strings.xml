@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LampAndNils3</string>
+    <string name="app_name">LAMP CLIMBING</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -9,6 +9,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_joe_fragment">Hello Joe fragment</string>
     <string name="hello_nils_fragment">Hello Nils fragment</string>
+
+    <string name="title_activity_climb_detail_view">ClimbDetailView</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="log_title">title placeholder</string>
     <string name="log_desc">desc placeholder</string>

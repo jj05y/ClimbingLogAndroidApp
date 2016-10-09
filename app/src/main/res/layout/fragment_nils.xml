@@ -86,6 +86,7 @@
                 android:layout_marginRight="@dimen/md_keylines"
                 android:layout_marginTop="@dimen/md_keylines"
                 tools:listitem="@layout/support_simple_spinner_dropdown_item" />
+
             <TextView
                 android:id="@+id/createlog_label_length"
                 style="?android:attr/textAppearance"
