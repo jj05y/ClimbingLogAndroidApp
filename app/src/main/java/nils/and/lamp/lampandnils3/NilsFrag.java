@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -59,6 +61,7 @@ public class NilsFrag extends Fragment {
     private TextView readonlyTitle;
     private AppCompatEditText editTitle;
     private Button resetAll;
+    private Button commit;
     private AppCompatEditText editDesc;
     private ImageView imageContainer;
     private Spinner grade;
@@ -240,6 +243,21 @@ public class NilsFrag extends Fragment {
                 grade.setSelection(0);
                 length.setSelection(0);
                 imageContainer.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.placeholder));
+            }
+        });
+
+        // commit button
+        commit = (Button) rootView.findViewById(R.id.createlog_commit_button);
+        commit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String title = editTitle.getText().toString();
+                String desc = editDesc.getText().toString();
+                String g = grade.getSelectedItem().toString();
+                String l = length.getSelectedItem().toString();
+                Drawable img = imageContainer.getDrawable();
+                ((MainActivity)getActivity()).getDatabase().addClimb(title,g,l,desc,img);
+                Toast.makeText(getContext(),"climb log added to database",Toast.LENGTH_SHORT).show();
             }
         });
 
