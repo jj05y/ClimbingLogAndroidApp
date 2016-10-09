@@ -19,13 +19,16 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
+import android.text.Selection;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.File;
@@ -58,6 +61,8 @@ public class NilsFrag extends Fragment {
     private Button resetAll;
     private AppCompatEditText editDesc;
     private ImageView imageContainer;
+    private Spinner grade;
+    private Spinner length;
     private final int pickGallery = 401; // whatever code that is
     private final int pickCamera = 402; // whatever code that is
     private final int externalStoragePermissionRequestCode = 404;
@@ -140,7 +145,7 @@ public class NilsFrag extends Fragment {
                                     case 1:
                                         File pants = getTempCaptureFile();
                                         if (pants == null) {
-                                            Log.e(TAG,"sorry m8, no write permission, no camera");
+                                            Log.e(TAG, "sorry m8, no write permission, no camera");
                                             break;
                                         }
                                         tempFileName = pants.getAbsolutePath();
@@ -178,12 +183,52 @@ public class NilsFrag extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                readonlyTitle.setText(editable.toString());
+                String str = editable.toString();
+                if (str.contains("\n")){
+                    str = str.replace("\n", "");
+                    editTitle.setText(str);
+                }
+                Selection.setSelection(editTitle.getText(),str.length());
+                readonlyTitle.setText(str);
             }
         });
 
         // desc field
         editDesc = (AppCompatEditText) rootView.findViewById(R.id.createlog_desc);
+        editDesc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String str = editable.toString();
+                if (str.contains("\n")){
+                    str = str.replace("\n", "");
+                    editDesc.setText(str);
+                }
+                Selection.setSelection(editDesc.getText(),str.length());
+            }
+        });
+
+        // grade spinner
+        grade = (Spinner) rootView.findViewById(R.id.createlog_grade);
+        final ArrayAdapter<CharSequence> gradeAdapter = ArrayAdapter.createFromResource(this.getContext(),
+                R.array.grade_array, android.R.layout.simple_spinner_item);
+        gradeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        grade.setAdapter(gradeAdapter);
+        // length spinner
+        length = (Spinner) rootView.findViewById(R.id.createlog_length);
+        final ArrayAdapter<CharSequence> lengthAdapter = ArrayAdapter.createFromResource(this.getContext(),
+                R.array.length_array, android.R.layout.simple_spinner_item);
+        lengthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        length.setAdapter(lengthAdapter);
 
         // reset button
         resetAll = (Button) rootView.findViewById(R.id.createlog_reset_button);
@@ -192,6 +237,9 @@ public class NilsFrag extends Fragment {
             public void onClick(View view) {
                 editTitle.setText("");
                 editDesc.setText("");
+                grade.setSelection(0);
+                length.setSelection(0);
+                imageContainer.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.placeholder));
             }
         });
 
@@ -289,6 +337,10 @@ public class NilsFrag extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(getString(R.string.cameraCaptureTempFilename), tempFileName);
+        outState.putString(getString(R.string.createLogTitle), editTitle.getText().toString());
+        outState.putString(getString(R.string.createLogDesc), editDesc.getText().toString());
+        outState.putInt(getString(R.string.createLogGrade), grade.getSelectedItemPosition());
+        outState.putInt(getString(R.string.createLogLength), length.getSelectedItemPosition());
     }
 
     @Override
