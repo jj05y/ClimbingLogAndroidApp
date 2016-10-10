@@ -1,6 +1,5 @@
-package nils.and.lamp.lampandnils3;
+package nils.and.lamp.app.Core;
 
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 /**

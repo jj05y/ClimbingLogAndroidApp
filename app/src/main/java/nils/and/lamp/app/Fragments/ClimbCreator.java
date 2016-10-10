@@ -1,4 +1,4 @@
-package nils.and.lamp.lampandnils3;
+package nils.and.lamp.app.Fragments;
 
 import android.Manifest;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.FileUriExposedException;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -35,18 +36,21 @@ import android.widget.Toast;
 
 import java.io.File;
 
+import nils.and.lamp.app.Activities.MainActivity;
+import nils.and.lamp.app.R;
+
 import static android.app.Activity.RESULT_OK;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link NilsFrag.OnFragmentInteractionListener} interface
+ * {@link ClimbCreator.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link NilsFrag#newInstance} factory method to
+ * Use the {@link ClimbCreator#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NilsFrag extends Fragment {
+public class ClimbCreator extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -74,7 +78,7 @@ public class NilsFrag extends Fragment {
 
     private static final String TAG = "CreateLog";
 
-    public NilsFrag() {
+    public ClimbCreator() {
         // Required empty public constructor
     }
 
@@ -84,11 +88,11 @@ public class NilsFrag extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment JoeFrag.
+     * @return A new instance of fragment ClimbBrowser.
      */
     // TODO: Rename and change types and number of parameters
-    public static NilsFrag newInstance(String param1, String param2) {
-        NilsFrag fragment = new NilsFrag();
+    public static ClimbCreator newInstance(String param1, String param2) {
+        ClimbCreator fragment = new ClimbCreator();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

@@ -1,4 +1,4 @@
-package nils.and.lamp.lampandnils3;
+package nils.and.lamp.app.Core;
 
 import android.content.ContentValues;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package nils.and.lamp.lampandnils3;
+package nils.and.lamp.app.Core;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,10 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextClock;
 import android.widget.TextView;
 
 import java.util.Vector;
+
+import nils.and.lamp.app.Core.Climb;
+import nils.and.lamp.app.R;
 
 /**
  * Created by joe on 09/10/16.

@@ -1,4 +1,4 @@
-package nils.and.lamp.lampandnils3;
+package nils.and.lamp.app;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

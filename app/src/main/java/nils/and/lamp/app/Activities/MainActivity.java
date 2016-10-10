@@ -1,4 +1,4 @@
-package nils.and.lamp.lampandnils3;
+package nils.and.lamp.app.Activities;
 
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -17,8 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import nils.and.lamp.app.Core.ClimbDataBaseHandler;
+import nils.and.lamp.app.Core.IClimbingApp;
+import nils.and.lamp.app.Fragments.ClimbBrowser;
+import nils.and.lamp.app.Fragments.ClimbCreator;
+import nils.and.lamp.app.R;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, JoeFrag.OnFragmentInteractionListener, NilsFrag.OnFragmentInteractionListener, IClimbingApp {
+        implements NavigationView.OnNavigationItemSelectedListener, ClimbBrowser.OnFragmentInteractionListener, ClimbCreator.OnFragmentInteractionListener, IClimbingApp {
 
     private ClimbDataBaseHandler dataBaseHandler;
 
@@ -101,7 +107,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_browse) {
             // Handle the joe action
             // Create a new fragment and specify the planet to show based on position
-            Fragment fragment = new JoeFrag();
+            Fragment fragment = new ClimbBrowser();
 
 
             // Insert the fragment by replacing any existing fragment
@@ -117,7 +123,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_create) {
             // Handle the joe action
             // Create a new fragment and specify the planet to show based on position
-            Fragment fragment = new NilsFrag();
+            Fragment fragment = new ClimbCreator();
 
 
             // Insert the fragment by replacing any existing fragment
@@ -136,7 +142,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {*/
 
         } else if (id == R.id.nav_search) {
-            Toast.makeText(this, "You gotta be kidding me", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Retrieving Online Database", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Na, Just Kidding", Toast.LENGTH_SHORT).show();
 
         }
 

@@ -1,12 +1,12 @@
 
-package nils.and.lamp.lampandnils3;
+package nils.and.lamp.app.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import java.util.Vector;
+import nils.and.lamp.app.R;
 
 public class ClimbDetailView extends AppCompatActivity {
 

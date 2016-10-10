@@ -1,8 +1,7 @@
-package nils.and.lamp.lampandnils3;
+package nils.and.lamp.app.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,13 +14,19 @@ import android.widget.ListView;
 
 import java.util.Vector;
 
+import nils.and.lamp.app.Activities.ClimbDetailView;
+import nils.and.lamp.app.Core.ClimbListAdapter;
+import nils.and.lamp.app.Core.Climb;
+import nils.and.lamp.app.Core.IClimbingApp;
+import nils.and.lamp.app.R;
 
-public class JoeFrag extends Fragment {
+
+public class ClimbBrowser extends Fragment {
 
 
     private OnFragmentInteractionListener mListener;
 
-    public JoeFrag() {
+    public ClimbBrowser() {
         // Required empty public constructor
     }
 
