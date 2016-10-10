@@ -23,4 +23,11 @@
     <string name="button_text_reset">Reset</string>
     <string name="label_title">Title</string>
     <string name="label_desc">Description</string>
+    <string name="pick_image">Image: Pick or Capture</string>
+
+    <string name="cameraCaptureTempFilename">key_cameraCaptureTempFilename</string>
+    <string name="createLogTitle">key_createTitle</string>
+    <string name="createLogDesc">key_createDesc</string>
+    <string name="createLogGrade">key_createGrade</string>
+    <string name="createLogLength">key_createLength</string>
 </resources>
