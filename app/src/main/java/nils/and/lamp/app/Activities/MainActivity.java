@@ -1,5 +1,6 @@
 package nils.and.lamp.app.Activities;
 
+import android.content.ContentResolver;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import java.io.File;
 
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
 import nils.and.lamp.app.Core.IClimbingApp;
@@ -41,13 +44,24 @@ public class MainActivity extends AppCompatActivity
 
         if (dataBaseHandler.isEmpty()) {
 
-            Drawable climb1 = getDrawable(R.drawable.climb1);
-            Drawable climb2 = getDrawable(R.drawable.climb2);
-            Drawable climb3 = getDrawable(R.drawable.climb3);
+            Uri climb1 = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+                    "://" + this.getResources().getResourcePackageName(R.drawable.climb1)
+                    + '/' + this.getResources().getResourceTypeName(R.drawable.climb1)
+                    + '/' + this.getResources().getResourceEntryName(R.drawable.climb1) );
+            Uri climb2 = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+                    "://" + this.getResources().getResourcePackageName(R.drawable.climb2)
+                    + '/' + this.getResources().getResourceTypeName(R.drawable.climb2)
+                    + '/' + this.getResources().getResourceEntryName(R.drawable.climb2) );
+            Uri climb3 = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+                    "://" + this.getResources().getResourcePackageName(R.drawable.climb3)
+                    + '/' + this.getResources().getResourceTypeName(R.drawable.climb3)
+                    + '/' + this.getResources().getResourceEntryName(R.drawable.climb3) );
+
+
             dataBaseHandler.addClimb("Street Fighter", "4c", "12","fab", climb1);
             dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "20","super fab",climb2);
             dataBaseHandler.addClimb("Graham Crackers", "5a", "22","super fab",climb3);
-            dataBaseHandler.addClimb("Paradise Lost", "4a", "17","super super fab",climb3);
+            dataBaseHandler.addClimb("Paradise Lost", "4a", "17","super super fab",climb2);
             dataBaseHandler.addClimb("Stereo-Tentacles", "5a", "14","super super super fab",climb3);
             Log.d("DB", "added some climbs");
 
@@ -68,11 +82,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        Log.d("BACK", "Back pressed");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
+            //drawer.closeDrawer(GravityCompat.START);
             super.onBackPressed();
+        } else {
+            drawer.openDrawer(Gravity.LEFT);
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
         }
     }
 

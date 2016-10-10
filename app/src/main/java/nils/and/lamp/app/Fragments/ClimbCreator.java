@@ -75,6 +75,7 @@ public class ClimbCreator extends Fragment {
     private final int externalStoragePermissionRequestCode = 404;
     private String tempFileName; //camera capture temp filename as string
     private View rootView;
+    private Uri imageUri;
 
     private static final String TAG = "CreateLog";
 
@@ -255,13 +256,17 @@ public class ClimbCreator extends Fragment {
         commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = editTitle.getText().toString();
-                String desc = editDesc.getText().toString();
-                String g = grade.getSelectedItem().toString();
-                String l = length.getSelectedItem().toString();
-                Drawable img = imageContainer.getDrawable();
-                ((MainActivity)getActivity()).getDatabase().addClimb(title,g,l,desc,img);
-                Toast.makeText(getContext(),"climb log added to database",Toast.LENGTH_SHORT).show();
+                if (imageUri!= null) {
+                    String title = editTitle.getText().toString();
+                    String desc = editDesc.getText().toString();
+                    String g = grade.getSelectedItem().toString();
+                    String l = length.getSelectedItem().toString();
+                    ((MainActivity) getActivity()).getDatabase().addClimb(title, g, l, desc, imageUri);
+                    Toast.makeText(getContext(), "climb log added to database", Toast.LENGTH_SHORT).show();
+                    imageUri = null;
+                } else {
+                    Toast.makeText(getActivity(), "Add an image first", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -342,14 +347,15 @@ public class ClimbCreator extends Fragment {
                         }
                         new backgroundImageLoader(rootView).execute(tempFileName);
                     } else {
-                        imageContainer.setImageURI(imageReturnedIntent.getData());
+                        imageUri = imageReturnedIntent.getData();
+                        imageContainer.setImageURI(imageUri);
                     }
                 }
                 break;
             case pickGallery:
                 if (resultCode == RESULT_OK) {
-                    Uri selectedImage = imageReturnedIntent.getData();
-                    imageContainer.setImageURI(selectedImage);
+                    imageUri = imageReturnedIntent.getData();
+                    imageContainer.setImageURI(imageUri);
                 }
                 break;
         }

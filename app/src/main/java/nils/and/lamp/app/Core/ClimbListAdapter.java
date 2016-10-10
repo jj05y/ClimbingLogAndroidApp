@@ -1,6 +1,7 @@
 package nils.and.lamp.app.Core;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +68,10 @@ public class ClimbListAdapter extends BaseAdapter {
         textLength.setText(climbs.get(i).getLength());
         textGrade.setText(climbs.get(i).getGrade());
         textDescription.setText(climbs.get(i).getDescription());
-        if (climbs.get(i).getPhoto()!= null) image.setImageDrawable(climbs.get(i).getPhoto());
+        if (climbs.get(i).getPhoto()!= null) {
+            image.setImageURI(climbs.get(i).getPhoto());
+            Log.d(null, "set image to " + climbs.get(i).getPhoto());
+        }
 
         return myInflatedView;
     }

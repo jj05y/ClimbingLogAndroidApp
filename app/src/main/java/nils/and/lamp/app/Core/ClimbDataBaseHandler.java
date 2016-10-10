@@ -9,16 +9,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Vector;
 
 
 public class ClimbDataBaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "DataBaseOfClimbs";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String TABLE_LABEL = "ClimbsTable";
 
 
@@ -27,7 +29,7 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
     private static final String KEY_GRADE = "grade";
     private static final String KEY_LENGTH = "length";
     private static final String KEY_DESC = "desc";
-  //  private static final String KEY_IMAGE = "image";
+    private static final String KEY_IMAGE = "image";
 
 
     public ClimbDataBaseHandler(Context context) {
@@ -43,8 +45,8 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
                         KEY_NAME + " TEXT, " +
                         KEY_GRADE + " TEXT, " +
                         KEY_LENGTH + " TEXT, " +
-                        KEY_DESC + " TEXT " +
-           //             KEY_IMAGE + " BLOB " +
+                        KEY_DESC + " TEXT, " +
+                        KEY_IMAGE + " TEXT " +
                         ")";
 
         db.execSQL(CREATE_LABEL_TABLE);
@@ -59,14 +61,14 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
     //CRUD
 
     //Create
-    public void addClimb(String name, String grade, String length, String desc, Drawable image) {
+    public void addClimb(String name, String grade, String length, String desc, Uri image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, name);
         values.put(KEY_GRADE, grade);
         values.put(KEY_LENGTH, length);
         values.put(KEY_DESC, desc);
-       // values.put(KEY_IMAGE, createByteArray(image));
+        values.put(KEY_IMAGE, image.toString());
 
         db.insert(TABLE_LABEL, null, values);
         Log.d("DB", "put in: " + values);
@@ -88,8 +90,9 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
                 String grade = cursor.getString(cursor.getColumnIndex(KEY_GRADE));
                 String length = cursor.getString(cursor.getColumnIndex(KEY_LENGTH));
                 String desc = cursor.getString(cursor.getColumnIndex(KEY_DESC));
-              //  Drawable image = getBitmapFromBlob(cursor.getBlob(cursor.getColumnIndex(KEY_IMAGE)));
-                climbsList.add(new Climb(null ,name, grade, length, desc));
+                File file = new File(cursor.getString(cursor.getColumnIndex(KEY_IMAGE)));
+                Uri image = Uri.fromFile(file);
+                climbsList.add(new Climb(image ,name, grade, length, desc));
             } while (cursor.moveToNext());
         }
         db.close();
@@ -111,7 +114,7 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
     }
 
 
-    private byte[] createByteArray(Drawable d) {
+/*    private byte[] createByteArray(Drawable d) {
         BitmapDrawable bitDw = ((BitmapDrawable) d);
         Bitmap bitmap = bitDw.getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -124,10 +127,15 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
                 bytes , 0,
                 bytes.length);
         return new BitmapDrawable(bitMapImage);
-    }
+    }*/
 
     public boolean isEmpty() {
-        return getClimbs().isEmpty();
+        String selectQuery = "SELECT " + KEY_ID +" FROM " + TABLE_LABEL;
+        Log.d("DB", " select query " + selectQuery);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        Log.d("DB", "Num rows in DB: " + cursor.getCount());
+        return cursor.getCount() == 0;
     }
 
 }
