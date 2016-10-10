@@ -12,15 +12,19 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Vector;
 
 
 public class ClimbDataBaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "DataBaseOfClimbs";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 8;
     private static final String TABLE_LABEL = "ClimbsTable";
 
 
@@ -46,7 +50,7 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
                         KEY_GRADE + " TEXT, " +
                         KEY_LENGTH + " TEXT, " +
                         KEY_DESC + " TEXT, " +
-                        KEY_IMAGE + " TEXT " +
+                        KEY_IMAGE + " BLOB " +
                         ")";
 
         db.execSQL(CREATE_LABEL_TABLE);
@@ -68,12 +72,13 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
         values.put(KEY_GRADE, grade);
         values.put(KEY_LENGTH, length);
         values.put(KEY_DESC, desc);
-        values.put(KEY_IMAGE, image.toString());
+        values.put(KEY_IMAGE, getByteArrayFromUri(image));
 
         db.insert(TABLE_LABEL, null, values);
         Log.d("DB", "put in: " + values);
         db.close();
     }
+
 
     //Read
 
@@ -90,8 +95,7 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
                 String grade = cursor.getString(cursor.getColumnIndex(KEY_GRADE));
                 String length = cursor.getString(cursor.getColumnIndex(KEY_LENGTH));
                 String desc = cursor.getString(cursor.getColumnIndex(KEY_DESC));
-                File file = new File(cursor.getString(cursor.getColumnIndex(KEY_IMAGE)));
-                Uri image = Uri.fromFile(file);
+                Uri image = getUriFromBlob(cursor.getBlob(cursor.getColumnIndex(KEY_IMAGE)));
                 climbsList.add(new Climb(image ,name, grade, length, desc));
             } while (cursor.moveToNext());
         }
@@ -136,6 +140,39 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         Log.d("DB", "Num rows in DB: " + cursor.getCount());
         return cursor.getCount() == 0;
+    }
+
+
+    private byte[] getByteArrayFromUri(Uri image) {
+        byte[] bArray = null;
+
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream objOstream = new ObjectOutputStream(baos);
+            objOstream.writeObject(image);
+            bArray = baos.toByteArray();
+
+        } catch (IOException e) {
+            Log.d(null, "Problem in createByteArray");
+            e.printStackTrace();
+        }
+
+        return bArray;
+    }
+
+
+    private Uri getUriFromBlob(byte[] bytes) {
+        Uri uri = null;
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
+            uri = (Uri) ois.readObject();
+        } catch (IOException e) {
+            Log.d(null, "Problem in decodeByteArray");
+        } catch (ClassNotFoundException e) {
+            Log.d(null, "Problem in decodeByteArray");
+        }
+
+        return uri;
     }
 
 }
