@@ -27,7 +27,7 @@ import nils.and.lamp.app.Fragments.ClimbCreator;
 import nils.and.lamp.app.R;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ClimbBrowser.OnFragmentInteractionListener, ClimbCreator.OnFragmentInteractionListener, IClimbingApp {
+        implements NavigationView.OnNavigationItemSelectedListener, ClimbBrowser.OnFragmentInteractionListener, ClimbCreator.OnFragmentInteractionListener {
 
     private ClimbDataBaseHandler dataBaseHandler;
 
