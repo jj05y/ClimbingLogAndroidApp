@@ -37,6 +37,7 @@ import android.widget.Toast;
 import java.io.File;
 
 import nils.and.lamp.app.Activities.MainActivity;
+import nils.and.lamp.app.Core.ClimbDataBaseHandler;
 import nils.and.lamp.app.R;
 
 import static android.app.Activity.RESULT_OK;
@@ -76,6 +77,7 @@ public class ClimbCreator extends Fragment {
     private String tempFileName; //camera capture temp filename as string
     private View rootView;
     private Uri imageUri;
+    private ClimbDataBaseHandler database;
 
     private static final String TAG = "CreateLog";
 
@@ -120,6 +122,7 @@ public class ClimbCreator extends Fragment {
             // restore camera capture temp filename
             tempFileName = savedInstanceState.getString(getString(R.string.cameraCaptureTempFilename));
         }
+        database= new ClimbDataBaseHandler(getActivity());
 
         // check permission
         int permissionCheck = ContextCompat.checkSelfPermission(this.getContext(),
@@ -261,7 +264,7 @@ public class ClimbCreator extends Fragment {
                     String desc = editDesc.getText().toString();
                     String g = grade.getSelectedItem().toString();
                     String l = length.getSelectedItem().toString();
-                    ((MainActivity) getActivity()).getDatabase().addClimb(title, g, l, desc, imageUri.toString());
+                    database.addClimb(title, g, l, desc, imageUri.toString());
                     Toast.makeText(getContext(), "climb log added to database", Toast.LENGTH_SHORT).show();
                     imageUri = null;
                 } else {

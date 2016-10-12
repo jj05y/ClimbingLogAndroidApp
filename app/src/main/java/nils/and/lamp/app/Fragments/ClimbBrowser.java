@@ -18,7 +18,6 @@ import nils.and.lamp.app.Activities.ClimbDetailView;
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
 import nils.and.lamp.app.Core.ClimbListAdapter;
 import nils.and.lamp.app.Core.Climb;
-import nils.and.lamp.app.Core.IClimbingApp;
 import nils.and.lamp.app.R;
 
 

@@ -164,9 +164,5 @@ public class MainActivity extends AppCompatActivity
         Log.d("FRAG", "boop");
     }
 
-    @Override
-    public ClimbDataBaseHandler getDatabase() {
-        return dataBaseHandler;
-    }
 }
 
