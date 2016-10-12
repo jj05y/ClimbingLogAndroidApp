@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -45,7 +44,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
-import nils.and.lamp.app.Activities.MainActivity;
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
 import nils.and.lamp.app.R;
 
@@ -93,6 +91,7 @@ public class ClimbCreator extends Fragment {
 
     private static final String TAG = "CreateLog";
     private StorageManager mStorageManager;
+    private Bitmap imageBitmap;
 
     public ClimbCreator() {
         // Required empty public constructor
@@ -277,14 +276,14 @@ public class ClimbCreator extends Fragment {
         commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (imageUri!= null) {
+                if (imageBitmap!= null) {
                     String title = editTitle.getText().toString();
                     String desc = editDesc.getText().toString();
                     String g = grade.getSelectedItem().toString();
                     String l = length.getSelectedItem().toString();
-                    database.addClimb(title, g, l, desc, imageUri.toString());
+                    database.addClimb(title, g, l, desc, imageBitmap);
                     Toast.makeText(getContext(), "climb log added to database", Toast.LENGTH_SHORT).show();
-                    imageUri = null;
+                    imageBitmap = null;
                 } else {
                     Toast.makeText(getActivity(), "Add an image first", Toast.LENGTH_SHORT).show();
                 }
