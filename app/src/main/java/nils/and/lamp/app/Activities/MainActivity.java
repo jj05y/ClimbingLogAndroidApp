@@ -21,7 +21,6 @@ import android.widget.Toast;
 import java.io.File;
 
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
-import nils.and.lamp.app.Core.IClimbingApp;
 import nils.and.lamp.app.Fragments.ClimbBrowser;
 import nils.and.lamp.app.Fragments.ClimbCreator;
 import nils.and.lamp.app.R;
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         if (dataBaseHandler == null) {
-            dataBaseHandler = new ClimbDataBaseHandler(this);
+            dataBaseHandler = new ClimbDataBaseHandler(getApplicationContext());
         }
 
         if (dataBaseHandler.isEmpty()) {

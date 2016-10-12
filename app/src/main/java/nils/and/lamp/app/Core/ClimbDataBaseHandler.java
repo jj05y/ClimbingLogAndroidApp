@@ -24,7 +24,7 @@ import java.util.Vector;
 public class ClimbDataBaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "DataBaseOfClimbs";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 12;
     private static final String TABLE_LABEL = "ClimbsTable";
 
 
@@ -108,7 +108,18 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
 
 
     //Update
+    public void updateClimb(String name, String grade, String length, String desc, String image) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_GRADE, grade);
+        values.put(KEY_LENGTH, length);
+        values.put(KEY_DESC, desc);
+        values.put(KEY_IMAGE, image);
 
+        db.update(TABLE_LABEL, values, KEY_NAME + "=\'" + name + "\'", null);
+        Log.d("DB", "updated in: " + values);
+        db.close();
+    }
 
     //Delete
     public void deleteClimb(String name) {

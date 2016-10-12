@@ -25,6 +25,7 @@ public class ClimbBrowser extends Fragment {
 
 
     private OnFragmentInteractionListener mListener;
+    private ListView climbsList;
 
     public ClimbBrowser() {
         // Required empty public constructor
@@ -41,8 +42,8 @@ public class ClimbBrowser extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_joe, container, false);
-        Log.d("FRAG", rootView +"");
-        ListView climbsList = (ListView) rootView.findViewById(R.id.listview_climbs);
+        Log.d("FRAG", "create");
+        climbsList = (ListView) rootView.findViewById(R.id.listview_climbs);
 
         Vector<Climb> climbs = (new ClimbDataBaseHandler(getActivity())).getClimbs();
 
@@ -55,7 +56,6 @@ public class ClimbBrowser extends Fragment {
                 Climb climb = ((ClimbListAdapter) adapterView.getAdapter()).getClimbs().get(i);
                 Log.d("FRAG", climb.getName() );
                 Intent intent = new Intent(getActivity(), ClimbDetailView.class);
-
                 intent.putExtra("Climb", climb);
                 startActivity(intent);
             }
@@ -75,6 +75,18 @@ public class ClimbBrowser extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
         Log.d("FRAG", "AATTTAATTCCCHHH");
+    }
+
+    @Override
+    public void onResume() {
+        Log.d("FRAG", "RRREEESSSUUMMMEEE");
+        Vector<Climb> climbs = (new ClimbDataBaseHandler(getActivity())).getClimbs();
+        if (climbsList != null) {
+            ((ClimbListAdapter)climbsList.getAdapter()).getClimbs().clear();
+            ((ClimbListAdapter)climbsList.getAdapter()).getClimbs().addAll(climbs);
+            ((ClimbListAdapter)climbsList.getAdapter()).notifyDataSetChanged();
+        }
+        super.onResume();
     }
 
     @Override

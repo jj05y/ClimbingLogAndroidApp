@@ -21,7 +21,6 @@ import java.io.File;
 
 import nils.and.lamp.app.Core.Climb;
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
-import nils.and.lamp.app.Core.IClimbingApp;
 import nils.and.lamp.app.R;
 
 import static java.security.AccessController.getContext;
@@ -80,8 +79,8 @@ public class ClimbDetailView extends AppCompatActivity {
                 String d = desc.getText().toString();
                 String g = grade.getSelectedItem().toString();
                 String l = length.getSelectedItem().toString();
-                database.addClimb(n, g, l, d, null);
-                Toast.makeText(getApplicationContext(), "climb log added to database", Toast.LENGTH_SHORT).show();
+                database.updateClimb(n, g, l, d, null);
+                Toast.makeText(getApplicationContext(), "climb updated", Toast.LENGTH_SHORT).show();
             }
         });
 
