@@ -1,18 +1,25 @@
 package nils.and.lamp.app.Fragments;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileUriExposedException;
+import android.os.storage.StorageManager;
+import android.os.storage.StorageVolume;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -22,6 +29,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.Selection;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 
 import nils.and.lamp.app.Activities.MainActivity;
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
@@ -56,6 +65,9 @@ public class ClimbCreator extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int REQ_ACCESS_DCIM = 403;
+    private static final String[] DIRECTORY_SELECTION = {"Lamp", "Lamp+Nils"};
+    private static final int REQ_TAKE_PHOTO = 405;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -80,6 +92,7 @@ public class ClimbCreator extends Fragment {
     private ClimbDataBaseHandler database;
 
     private static final String TAG = "CreateLog";
+    private StorageManager mStorageManager;
 
     public ClimbCreator() {
         // Required empty public constructor
@@ -118,6 +131,16 @@ public class ClimbCreator extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_nils, container, false);
 
+        if (mStorageManager == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mStorageManager = getActivity()
+                        .getSystemService(StorageManager.class);
+            } else {
+                mStorageManager = (StorageManager) getActivity()
+                        .getSystemService(Context.STORAGE_SERVICE);
+            }
+        }
+
         if (savedInstanceState != null) {
             // restore camera capture temp filename
             tempFileName = savedInstanceState.getString(getString(R.string.cameraCaptureTempFilename));
@@ -154,16 +177,11 @@ public class ClimbCreator extends Fragment {
                                 // of the selected item
                                 switch (which) {
                                     case 1:
-                                        File pants = getTempCaptureFile();
-                                        if (pants == null) {
-                                            Log.e(TAG, "sorry m8, no write permission, no camera");
-                                            break;
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                            requestTakePhotoNougat();
+                                        } else {
+                                            takePhoto();
                                         }
-                                        tempFileName = pants.getAbsolutePath();
-                                        Uri uri = Uri.fromFile(pants);
-                                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                                        startActivityForResult(intent, pickCamera);
                                         break;
                                     case 0:
                                         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
@@ -276,6 +294,27 @@ public class ClimbCreator extends Fragment {
         return rootView;
     }
 
+    @TargetApi(24)
+    private void requestTakePhotoNougat() {
+        String dirName = Environment.DIRECTORY_DCIM;
+        StorageVolume storageVolume = mStorageManager.getPrimaryStorageVolume();
+        Intent accessIntent = storageVolume.createAccessIntent(dirName);
+        startActivityForResult(accessIntent, REQ_ACCESS_DCIM);
+    }
+
+    private void takePhoto() {
+        File pants = getTempCaptureFile();
+        if (pants == null) {
+            Log.e(TAG, "sorry m8, no write permission, no camera");
+            return;
+        }
+        tempFileName = pants.getAbsolutePath();
+        Uri uri = Uri.fromFile(pants);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        startActivityForResult(intent, pickCamera);
+    }
+
     File getTempCaptureFile() {
         File dir = new File(Environment.getExternalStorageDirectory(),
                 getString(getActivity().getApplicationInfo().labelRes));
@@ -361,6 +400,88 @@ public class ClimbCreator extends Fragment {
                     imageContainer.setImageURI(imageUri);
                 }
                 break;
+            case REQ_ACCESS_DCIM:
+                if (resultCode == RESULT_OK &&
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getActivity()
+                            .getContentResolver()
+                            .takePersistableUriPermission(
+                                    imageReturnedIntent.getData(),
+                                    Intent.FLAG_GRANT_READ_URI_PERMISSION |
+                                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+                    try {
+                        dealPhotoUri(imageReturnedIntent.getData());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("processing URI error", e.toString());
+                    }
+                }
+                break;
+        }
+    }
+
+    @TargetApi(24)
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void dealPhotoUri(Uri uri) throws IOException {
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        Uri docUri = DocumentsContract.buildDocumentUriUsingTree(uri,
+                DocumentsContract.getTreeDocumentId(uri));
+        Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(uri,
+                DocumentsContract.getTreeDocumentId(uri));
+
+        File file = getTempCaptureFile();
+        if (!file.getParentFile().exists())
+            file.getParentFile().mkdirs();
+        if (!file.exists())
+            file.createNewFile();
+
+        Log.d(TAG, "docUri = " + docUri);
+        Log.d(TAG, "childrenUri = " + childrenUri);
+
+        String caikuDirId = null;
+        try (Cursor docCursor = contentResolver.query(childrenUri, DIRECTORY_SELECTION, null, null, null)) {
+            while (docCursor != null && docCursor.moveToNext()) {
+                Log.d(TAG, "dir name= " + docCursor.getString(docCursor.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME)));
+                if ("sccss".equals(docCursor.getString(docCursor.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME))))
+                    caikuDirId = docCursor.getString(docCursor.getColumnIndex(DocumentsContract.Document.COLUMN_DOCUMENT_ID));
+            }
+        }
+        if (!TextUtils.isEmpty(caikuDirId)) {
+            Log.d(TAG,"caikuDirId: " + caikuDirId);
+            Uri caikuUri = DocumentsContract.buildDocumentUriUsingTree(docUri, caikuDirId);
+            Log.d(TAG,"caikuUri=" + caikuUri.toString());
+
+            Uri caikuDirUri = DocumentsContract.buildChildDocumentsUriUsingTree(caikuUri, caikuDirId);
+            Log.d(TAG,"caikuDirUri=" + caikuDirUri.toString());
+
+            String imgId = null;
+            try (Cursor fileCursor = contentResolver.query(caikuDirUri, DIRECTORY_SELECTION, null, null, null)) {
+                while (fileCursor != null && fileCursor.moveToNext()) {
+                    Log.d(TAG,"file name= " + fileCursor.getString(fileCursor.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME)));
+                    if (file.getName().equals(fileCursor.getString(fileCursor.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME)))) {
+                        imgId = fileCursor.getString(fileCursor.getColumnIndex(DocumentsContract.Document.COLUMN_DOCUMENT_ID));
+                    }
+                }
+            }
+
+            if (!TextUtils.isEmpty(imgId)) {
+                Log.d(TAG,"caikuDirId: " + imgId);
+                Uri imgUri = DocumentsContract.buildDocumentUriUsingTree(caikuUri, imgId);
+                Log.d(TAG,"fileUri = " + imgUri);
+
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                this.imageUri = Uri.fromFile(new File(file.getAbsolutePath()));
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                startActivityForResult(intent, REQ_TAKE_PHOTO);
+            } else {
+
+                Log.d(TAG,"photo folder not found!");
+                Toast.makeText(getContext(),"Photo Folder not found!",Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Log.d(TAG,"photo folder not found!");
+            Toast.makeText(getContext(),"Photo Folder not found!", Toast.LENGTH_SHORT).show();
         }
     }
 
