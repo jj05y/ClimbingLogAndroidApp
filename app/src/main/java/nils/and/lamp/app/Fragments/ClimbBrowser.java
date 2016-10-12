@@ -15,6 +15,7 @@ import android.widget.ListView;
 import java.util.Vector;
 
 import nils.and.lamp.app.Activities.ClimbDetailView;
+import nils.and.lamp.app.Core.ClimbDataBaseHandler;
 import nils.and.lamp.app.Core.ClimbListAdapter;
 import nils.and.lamp.app.Core.Climb;
 import nils.and.lamp.app.Core.IClimbingApp;
@@ -37,14 +38,14 @@ public class ClimbBrowser extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_joe, container, false);
         Log.d("FRAG", rootView +"");
         ListView climbsList = (ListView) rootView.findViewById(R.id.listview_climbs);
 
-        Vector<Climb> climbs = ((IClimbingApp) getActivity()).getDatabase().getClimbs();
+        Vector<Climb> climbs = (new ClimbDataBaseHandler(getActivity())).getClimbs();
 
 
         Log.d("FRAG", climbsList +"");
@@ -56,7 +57,7 @@ public class ClimbBrowser extends Fragment {
                 Log.d("FRAG", climb.getName() );
                 Intent intent = new Intent(getActivity(), ClimbDetailView.class);
 
-                intent.putExtra("ClimbIndex", i);
+                intent.putExtra("Climb", climb);
                 startActivity(intent);
             }
         });
@@ -74,6 +75,7 @@ public class ClimbBrowser extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        Log.d("FRAG", "AATTTAATTCCCHHH");
     }
 
     @Override

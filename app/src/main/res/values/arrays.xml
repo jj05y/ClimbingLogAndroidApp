@@ -8,26 +8,26 @@
     <string name="pick_image_options_camera">From Camera App</string>
 
     <string-array name="grade_array">
-        <item>Grade</item>
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
+        <item>4a</item>
+        <item>4b</item>
+        <item>4c</item>
+        <item>5a</item>
+        <item>5b</item>
+        <item>5c</item>
+        <item>6a</item>
+        <item>6b</item>
+        <item>6c</item>
     </string-array>
 
     <string-array name="length_array">
-        <item>Length</item>
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
+        <item>~10m</item>
+        <item>~15m</item>
+        <item>~20m</item>
+        <item>~25m</item>
+        <item>~30m</item>
+        <item>~35m</item>
+        <item>~40m</item>
+        <item>~45m</item>
+        <item>~50m</item>
     </string-array>
 </resources>

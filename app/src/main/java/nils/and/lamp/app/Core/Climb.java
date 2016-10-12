@@ -2,19 +2,21 @@ package nils.and.lamp.app.Core;
 
 import android.net.Uri;
 
+import java.io.Serializable;
+
 /**
  * Created by joe on 09/10/16.
  */
 
-public class Climb {
+public class Climb implements Serializable{
 
-    private Uri photo;
+    private String photo;
     private String name;
     private String grade;
     private String length;
     private String description;
 
-    public Climb(Uri photo, String name, String grade, String length, String description) {
+    public Climb(String photo, String name, String grade, String length, String description) {
         this.photo = photo;
         this.name = name;
         this.grade = grade;
@@ -25,11 +27,11 @@ public class Climb {
     public Climb() {
     }
 
-    public Uri getPhoto() {
+    public String getPhoto() {
         return photo;
     }
 
-    public void setPhoto(Uri photo) {
+    public void setPhoto(String photo) {
         this.photo = photo;
     }
 
@@ -72,7 +74,7 @@ public class Climb {
                 ", grade='" + grade + '\'' +
                 ", length='" + length + '\'' +
                 ", description='" + description + '\'' +
-                ", photo='" + photo.toString() + '\'' +
+//                ", photo='" + photo.toString() + '\'' +
                 '}';
     }
 }

@@ -1,6 +1,7 @@
 package nils.and.lamp.app.Core;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.Vector;
 
 import nils.and.lamp.app.Core.Climb;
@@ -69,7 +71,8 @@ public class ClimbListAdapter extends BaseAdapter {
         textGrade.setText(climbs.get(i).getGrade());
         textDescription.setText(climbs.get(i).getDescription());
         if (climbs.get(i).getPhoto()!= null) {
-            image.setImageURI(climbs.get(i).getPhoto());
+            File file = new File(climbs.get(i).getPhoto());
+            image.setImageURI(Uri.fromFile(file));
             Log.d(null, "set image to " + climbs.get(i).getPhoto());
         }
 

@@ -44,25 +44,15 @@ public class MainActivity extends AppCompatActivity
 
         if (dataBaseHandler.isEmpty()) {
 
-            Uri climb1 = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
-                    "://" + this.getResources().getResourcePackageName(R.drawable.climb1)
-                    + '/' + this.getResources().getResourceTypeName(R.drawable.climb1)
-                    + '/' + this.getResources().getResourceEntryName(R.drawable.climb1) );
-            Uri climb2 = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
-                    "://" + this.getResources().getResourcePackageName(R.drawable.climb2)
-                    + '/' + this.getResources().getResourceTypeName(R.drawable.climb2)
-                    + '/' + this.getResources().getResourceEntryName(R.drawable.climb2) );
-            Uri climb3 = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
-                    "://" + this.getResources().getResourcePackageName(R.drawable.climb3)
-                    + '/' + this.getResources().getResourceTypeName(R.drawable.climb3)
-                    + '/' + this.getResources().getResourceEntryName(R.drawable.climb3) );
+            String climb1 = null;
+            String climb2 = null;
+            String climb3 = null;
 
-
-            dataBaseHandler.addClimb("Street Fighter", "4c", "12","fab", climb1);
-            dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "20","super fab",climb2);
-            dataBaseHandler.addClimb("Graham Crackers", "5a", "22","super fab",climb3);
-            dataBaseHandler.addClimb("Paradise Lost", "4a", "17","super super fab",climb2);
-            dataBaseHandler.addClimb("Stereo-Tentacles", "5a", "14","super super super fab",climb3);
+            dataBaseHandler.addClimb("Street Fighter", "4c", "~10m","fab", climb1);
+            dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "~20m","super fab",climb2);
+            dataBaseHandler.addClimb("Graham Crackers", "5a", "~25m","super fab",climb3);
+            dataBaseHandler.addClimb("Paradise Lost", "4a", "~20m","super super fab",climb2);
+            dataBaseHandler.addClimb("Stereo-Tentacles", "5a", "~15m","super super super fab",climb3);
             Log.d("DB", "added some climbs");
 
 
