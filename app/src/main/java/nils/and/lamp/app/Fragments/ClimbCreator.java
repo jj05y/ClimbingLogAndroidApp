@@ -77,6 +77,7 @@ public class ClimbCreator extends Fragment {
     private ClimbDataBaseHandler database;
 
     private static final String TAG = "CreateLog";
+    private Bitmap imageBitmap;
 
     public ClimbCreator() {
         // Required empty public constructor
@@ -256,14 +257,14 @@ public class ClimbCreator extends Fragment {
         commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (imageUri!= null) {
+                if (imageBitmap!= null) {
                     String title = editTitle.getText().toString();
                     String desc = editDesc.getText().toString();
                     String g = grade.getSelectedItem().toString();
                     String l = length.getSelectedItem().toString();
-                    database.addClimb(title, g, l, desc, imageUri.toString());
+                    database.addClimb(title, g, l, desc, imageBitmap);
                     Toast.makeText(getContext(), "climb log added to database", Toast.LENGTH_SHORT).show();
-                    imageUri = null;
+                    imageBitmap = null;
                 } else {
                     Toast.makeText(getActivity(), "Add an image first", Toast.LENGTH_SHORT).show();
                 }
