@@ -15,7 +15,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileUriExposedException;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 import android.provider.DocumentsContract;
@@ -64,7 +63,11 @@ public class ClimbCreator extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final int REQ_ACCESS_DCIM = 403;
-    private static final String[] DIRECTORY_SELECTION = {"Lamp", "Lamp+Nils"};
+    private static final String[] DIRECTORY_SELECTION = {
+            DocumentsContract.Document.COLUMN_DISPLAY_NAME,
+            DocumentsContract.Document.COLUMN_MIME_TYPE,
+            DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+    };
     private static final int REQ_TAKE_PHOTO = 405;
 
     // TODO: Rename and change types of parameters
