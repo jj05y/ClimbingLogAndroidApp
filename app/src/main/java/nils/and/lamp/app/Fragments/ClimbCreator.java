@@ -7,12 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileUriExposedException;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -36,7 +34,6 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import nils.and.lamp.app.Activities.MainActivity;
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
 import nils.and.lamp.app.R;
 

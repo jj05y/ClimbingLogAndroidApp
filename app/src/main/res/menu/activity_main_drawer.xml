@@ -11,9 +11,13 @@
             android:icon="@drawable/browse"
             android:title="Browse Climbs" />
         <item
-        android:id="@+id/nav_search"
+            android:id="@+id/nav_search"
+            android:icon="@drawable/search"
+            android:title="Search Climbs Online" />
+        <item
+        android:id="@+id/nav_gps"
         android:icon="@drawable/search"
-        android:title="Search Climbs Online" />
+        android:title="TestGPS" />
 
     </group>
 

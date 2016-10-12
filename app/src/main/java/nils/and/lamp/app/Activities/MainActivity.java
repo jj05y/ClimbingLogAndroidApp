@@ -1,7 +1,6 @@
 package nils.and.lamp.app.Activities;
 
-import android.content.ContentResolver;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
@@ -18,15 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.io.File;
-
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
 import nils.and.lamp.app.Fragments.ClimbBrowser;
 import nils.and.lamp.app.Fragments.ClimbCreator;
+import nils.and.lamp.app.Fragments.TestGps;
 import nils.and.lamp.app.R;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ClimbBrowser.OnFragmentInteractionListener, ClimbCreator.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ClimbBrowser.OnFragmentInteractionListener, ClimbCreator.OnFragmentInteractionListener, TestGps.OnFragmentInteractionListener {
 
     private ClimbDataBaseHandler dataBaseHandler;
 
@@ -43,9 +41,9 @@ public class MainActivity extends AppCompatActivity
 
         if (dataBaseHandler.isEmpty()) {
 
-            String climb1 = null;
-            String climb2 = null;
-            String climb3 = null;
+            Bitmap climb1 = null;
+            Bitmap climb2 = null;
+            Bitmap climb3 = null;
 
             dataBaseHandler.addClimb("Street Fighter", "4c", "~10m","fab", climb1);
             dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "~20m","super fab",climb2);
@@ -150,6 +148,15 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_search) {
             Toast.makeText(this, "Retrieving Online Database", Toast.LENGTH_SHORT).show();
             Toast.makeText(this, "Na, Just Kidding", Toast.LENGTH_SHORT).show();
+
+        } else if (id == R.id.nav_gps) {
+            Fragment fragment = new TestGps();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_frag, fragment)
+                    .commit();
+
 
         }
 

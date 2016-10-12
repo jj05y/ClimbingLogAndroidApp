@@ -32,4 +32,7 @@
     <string name="createLogDesc">key_createDesc</string>
     <string name="createLogGrade">key_createGrade</string>
     <string name="createLogLength">key_createLength</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
