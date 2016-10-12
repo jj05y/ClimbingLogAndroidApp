@@ -1,8 +1,13 @@
 package nils.and.lamp.app.Fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import nils.and.lamp.app.R;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -30,6 +36,8 @@ public class TestGps extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private double longitude;
+    private double latitude;
 
     public TestGps() {
         // Required empty public constructor
@@ -68,6 +76,16 @@ public class TestGps extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_test_gps, container, false);
 
+        longitude = 0.0;
+        latitude = 0.0;
+        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+        }
+
+
         final TextView text = (TextView) rootView.findViewById(R.id.gps_coords);
         text.setText("PUSH THE BUTTON");
 
@@ -75,7 +93,7 @@ public class TestGps extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                text.setText("NUH UH");
+                text.setText(longitude + " " + latitude);
             }
         });
 
