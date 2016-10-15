@@ -1,7 +1,13 @@
 package nils.and.lamp.app.Activities;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
@@ -35,20 +42,30 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Quack Quack", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+            }
+        });
+
         if (dataBaseHandler == null) {
             dataBaseHandler = new ClimbDataBaseHandler(getApplicationContext());
         }
 
         if (dataBaseHandler.isEmpty()) {
 
-            Bitmap climb1 = null;
-            Bitmap climb2 = null;
-            Bitmap climb3 = null;
+            Bitmap climb1 = BitmapFactory.decodeResource(getResources(), R.drawable.climb1);
+            Bitmap climb3 = BitmapFactory.decodeResource(getResources(), R.drawable.climb3);
 
+
+            //TODO thread this
             dataBaseHandler.addClimb("Street Fighter", "4c", "~10m","fab", climb1);
-            dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "~20m","super fab",climb2);
+            dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "~20m","super fab",climb3);
             dataBaseHandler.addClimb("Graham Crackers", "5a", "~25m","super fab",climb3);
-            dataBaseHandler.addClimb("Paradise Lost", "4a", "~20m","super super fab",climb2);
+            dataBaseHandler.addClimb("Paradise Lost", "4a", "~20m","super super fab",climb1);
             dataBaseHandler.addClimb("Stereo-Tentacles", "5a", "~15m","super super super fab",climb3);
             Log.d("DB", "added some climbs");
 
@@ -65,6 +82,28 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public  Bitmap drawableToBitmap (Drawable drawable) {
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if(bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 
     @Override

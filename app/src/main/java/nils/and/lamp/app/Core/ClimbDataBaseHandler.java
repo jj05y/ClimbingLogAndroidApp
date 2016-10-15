@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,7 +18,7 @@ import java.util.Vector;
 public class ClimbDataBaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "DataBaseOfClimbs";
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 20;
 
     private static final String TABLE_CLIMBS = "ClimbsTable";
     private static final String TABLE_PICTURES = "PicturesTable";
@@ -62,6 +63,7 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d("DB", "Cleared Tables");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CLIMBS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PICTURES);
         onCreate(db);
@@ -86,7 +88,7 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
         values.put(KEY_IMAGEKEY, name);
         values.put(KEY_IMAGE, createByteArray(image));
         db.insert(TABLE_PICTURES, null, values);
-        Log.d("DB", "put in image: " + name);
+        Log.d("DB", "put in image with key: " + name);
         db.close();
     }
 
@@ -118,8 +120,8 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
     }
 
 
-    public Bitmap getPicture(String name) {
-        String selectQuery = "SELECT " + KEY_IMAGE + " FROM " + TABLE_PICTURES + " WHERE " + KEY_IMAGEKEY + "=\'" + name + "\'";
+    public Bitmap getPicture(String imageKey) {
+        String selectQuery = "SELECT " + KEY_IMAGE + " FROM " + TABLE_PICTURES + " WHERE " + KEY_IMAGEKEY + "=\'" + imageKey + "\'";
         Log.d(null, " select query " + selectQuery);
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -127,7 +129,10 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
+                Log.d("DB", "trying to get image with key: " + imageKey);
                 image = getBitmapFromBlob(cursor.getBlob(cursor.getColumnIndex(KEY_IMAGE)));
+                Log.d("DB", "Got image with key: " + imageKey);
+
             } while (cursor.moveToNext());
         }
         db.close();
@@ -137,14 +142,12 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
 
 
     //Update
-    public void updateClimb(String name, String grade, String length, String desc, String imageKey) {
+    public void updateClimb(String name, String grade, String length, String desc) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_GRADE, grade);
         values.put(KEY_LENGTH, length);
         values.put(KEY_DESC, desc);
-        values.put(KEY_IMAGEKEY, imageKey);
-
         db.update(TABLE_CLIMBS, values, KEY_NAME + "=\'" + name + "\'", null);
         Log.d("DB", "updated in: " + values);
         db.close();
@@ -153,8 +156,12 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
     //Delete
     public void deleteClimb(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CLIMBS, KEY_NAME + " = \"" + name + "\"" , null);
-        db.delete(TABLE_PICTURES, KEY_NAME + " = \"" + name + "\"" , null);
+        try {
+            db.delete(TABLE_CLIMBS, KEY_NAME + " = \"" + name + "\"", null);
+            db.delete(TABLE_PICTURES, KEY_NAME + " = \"" + name + "\"", null);
+        } catch (SQLiteException e) {
+            Log.d("DB", "Issues!");
+        }
         db.close();
     }
 

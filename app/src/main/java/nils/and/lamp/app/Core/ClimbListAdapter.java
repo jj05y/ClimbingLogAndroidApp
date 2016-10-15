@@ -1,6 +1,8 @@
 package nils.and.lamp.app.Core;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -63,18 +65,18 @@ public class ClimbListAdapter extends BaseAdapter {
         TextView textLength = (TextView) myInflatedView.findViewById(R.id.textView_length);
         TextView textGrade = (TextView) myInflatedView.findViewById(R.id.textView_grade);
         TextView textDescription = (TextView) myInflatedView.findViewById(R.id.textView_description);
-        ImageView image = (ImageView) myInflatedView.findViewById(R.id.imageView_climb);
+        ImageView imageView = (ImageView) myInflatedView.findViewById(R.id.imageView_climb);
 
 
         textName.setText(climbs.get(i).getName());
         textLength.setText(climbs.get(i).getLength());
         textGrade.setText(climbs.get(i).getGrade());
         textDescription.setText(climbs.get(i).getDescription());
-        if (climbs.get(i).getPhoto()!= null) {
-            File file = new File(climbs.get(i).getPhoto());
-            image.setImageURI(Uri.fromFile(file));
-            Log.d(null, "set image to " + climbs.get(i).getPhoto());
-        }
+
+        String imageKey = climbs.get(i).getPhoto();
+        //TODO thread this
+        Bitmap image = (new ClimbDataBaseHandler(context)).getPicture(imageKey);
+        imageView.setImageDrawable(new BitmapDrawable(context.getResources(), image));
 
         return myInflatedView;
     }
