@@ -34,7 +34,7 @@ public class ClimbDetailView extends AppCompatActivity {
     private ArrayAdapter<CharSequence> gradeAdapter;
     private Spinner grade;
     private Spinner length;
-    private EditText name;
+    private TextView name;
     private EditText desc;
 
     private Climb climb;
@@ -57,7 +57,7 @@ public class ClimbDetailView extends AppCompatActivity {
         Bitmap image = database.getPicture(climb.getName());
         imageView.setImageDrawable(new BitmapDrawable(getResources(), image));
 
-        name = (EditText) findViewById(R.id.detailview_title);
+        name = (TextView) findViewById(R.id.detailview_title);
         name.setText(climb.getName());
         desc = (EditText) findViewById(R.id.detailview_desc);
         desc.setText(climb.getDescription());

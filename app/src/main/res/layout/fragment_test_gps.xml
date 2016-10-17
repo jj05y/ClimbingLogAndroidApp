@@ -10,6 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/button_getGPS" />
+    <Button
+        android:text="Send to google Maps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_sendToMaps" />
 
     <TextView
         android:id="@+id/gps_coords"

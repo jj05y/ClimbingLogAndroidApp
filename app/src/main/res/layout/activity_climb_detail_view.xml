@@ -47,7 +47,7 @@
                 android:layout_marginTop="@dimen/md_keylines"
                 android:text="@string/label_title" />
 
-            <android.support.v7.widget.AppCompatEditText
+            <TextView
                 android:id="@+id/detailview_title"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/createlog_title_height"
