@@ -1,5 +1,6 @@
 package nils.and.lamp.app.Activities;
 
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,6 +34,7 @@ import nils.and.lamp.app.R;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ClimbBrowser.OnFragmentInteractionListener, ClimbCreator.OnFragmentInteractionListener, TestGps.OnFragmentInteractionListener {
 
+    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 9998;
     private ClimbDataBaseHandler dataBaseHandler;
 
     @Override
@@ -97,6 +99,9 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -29,6 +29,7 @@ import nils.and.lamp.app.R;
 public class TestGps extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
 
+    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 9998;
     private OnFragmentInteractionListener mListener;
     private double longitude;
     private double latitude;
@@ -61,10 +62,17 @@ public class TestGps extends Fragment implements GoogleApiClient.ConnectionCallb
         getGPSButton = (Button) rootView.findViewById(R.id.button_getGPS);
         sendGPSButton = (Button) rootView.findViewById(R.id.button_sendToMaps);
 
+
+
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 buildGoogleApiClient();
+            } else {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_FINE_LOCATION);
             }
+
         } else {
             buildGoogleApiClient();
         }
@@ -93,7 +101,7 @@ public class TestGps extends Fragment implements GoogleApiClient.ConnectionCallb
             @Override
             public void onClick(View view) {
                 if (latitude != 0.0 && longitude != 0.0) {
-                    Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude);
+                    Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q="+latitude+","+longitude);
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -104,6 +112,33 @@ public class TestGps extends Fragment implements GoogleApiClient.ConnectionCallb
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        Toast.makeText(getActivity(), "hi", Toast.LENGTH_SHORT).show();
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getActivity(), "Thank you for permission", Toast.LENGTH_SHORT).show();
+                    buildGoogleApiClient();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    Toast.makeText(getActivity(), "You need permission", Toast.LENGTH_SHORT).show();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     protected synchronized void buildGoogleApiClient() {

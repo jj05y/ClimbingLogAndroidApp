@@ -45,6 +45,7 @@ public class ClimbBrowser extends Fragment {
         Log.d("FRAG", "create");
         climbsList = (ListView) rootView.findViewById(R.id.listview_climbs);
 
+
         Vector<Climb> climbs = (new ClimbDataBaseHandler(getActivity())).getClimbs();
 
 
