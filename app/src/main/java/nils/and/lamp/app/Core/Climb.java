@@ -15,16 +15,26 @@ public class Climb implements Serializable{
     private String grade;
     private String length;
     private String description;
+    private String gpsCoords;
 
-    public Climb(String photo, String name, String grade, String length, String description) {
+    public Climb(String photo, String name, String grade, String length, String description, String gpsCoords) {
         this.photo = photo;
         this.name = name;
         this.grade = grade;
         this.length = length;
         this.description = description;
+        this.gpsCoords = gpsCoords;
     }
 
     public Climb() {
+    }
+
+    public String getGpsCoords() {
+        return gpsCoords;
+    }
+
+    public void setGpsCoords(String gpsCoords) {
+        this.gpsCoords = gpsCoords;
     }
 
     public String getPhoto() {

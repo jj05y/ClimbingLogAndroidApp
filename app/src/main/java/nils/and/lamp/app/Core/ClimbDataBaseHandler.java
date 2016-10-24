@@ -18,7 +18,7 @@ import java.util.Vector;
 public class ClimbDataBaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "DataBaseOfClimbs";
-    private static final int DATABASE_VERSION = 20;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String TABLE_CLIMBS = "ClimbsTable";
     private static final String TABLE_PICTURES = "PicturesTable";
@@ -30,6 +30,7 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
     private static final String KEY_DESC = "desc";
     private static final String KEY_IMAGEKEY = "imagekey";
     private static final String KEY_IMAGE = "image";
+    public static final String KEY_COORDS = "coords";
 
 
     public ClimbDataBaseHandler(Context context) {
@@ -46,7 +47,8 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
                         KEY_GRADE + " TEXT, " +
                         KEY_LENGTH + " TEXT, " +
                         KEY_DESC + " TEXT, " +
-                        KEY_IMAGEKEY + " TEXT " +
+                        KEY_IMAGEKEY + " TEXT, " +
+                        KEY_COORDS + " TEXT " +
                         ")";
 
         db.execSQL(CREATE_CLIMB_TABLE);
@@ -72,7 +74,7 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
     //CRUD
 
     //Create
-    public void addClimb(String name, String grade, String length, String desc, Bitmap image) {
+    public void addClimb(String name, String grade, String length, String desc, Bitmap image, String coords) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -81,6 +83,7 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
         values.put(KEY_LENGTH, length);
         values.put(KEY_DESC, desc);
         values.put(KEY_IMAGEKEY, name);
+        values.put(KEY_COORDS, coords);
         db.insert(TABLE_CLIMBS, null, values);
         Log.d("DB", "put in: " + values);
 
@@ -109,7 +112,8 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
                 String length = cursor.getString(cursor.getColumnIndex(KEY_LENGTH));
                 String desc = cursor.getString(cursor.getColumnIndex(KEY_DESC));
                 String imagekey = cursor.getString(cursor.getColumnIndex(KEY_IMAGEKEY));
-                climbsList.add(new Climb(imagekey ,name, grade, length, desc));
+                String coords = cursor.getString(cursor.getColumnIndex(KEY_COORDS));
+                climbsList.add(new Climb(imagekey ,name, grade, length, desc, coords));
             } while (cursor.moveToNext());
         }
         db.close();

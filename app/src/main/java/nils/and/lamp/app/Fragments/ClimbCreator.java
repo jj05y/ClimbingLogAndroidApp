@@ -262,7 +262,7 @@ public class ClimbCreator extends Fragment {
                     String desc = editDesc.getText().toString();
                     String g = grade.getSelectedItem().toString();
                     String l = length.getSelectedItem().toString();
-                    database.addClimb(title, g, l, desc, imageBitmap);
+                    database.addClimb(title, g, l, desc, imageBitmap, null);
                     Toast.makeText(getContext(), "climb log added to database", Toast.LENGTH_SHORT).show();
                     imageBitmap = null;
                 } else {

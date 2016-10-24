@@ -65,11 +65,11 @@ public class MainActivity extends AppCompatActivity
 
 
             //TODO thread this
-            dataBaseHandler.addClimb("Street Fighter", "4c", "~10m","fab", climb1);
-            dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "~20m","super fab",climb3);
-            dataBaseHandler.addClimb("Graham Crackers", "5a", "~25m","super fab",climb3);
-            dataBaseHandler.addClimb("Paradise Lost", "4a", "~20m","super super fab",climb1);
-            dataBaseHandler.addClimb("Stereo-Tentacles", "5a", "~15m","super super super fab",climb3);
+            dataBaseHandler.addClimb("Street Fighter", "4c", "~10m","fab", climb1, "53.2713,-6.1074");
+            dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "~20m","super fab",climb3,"53.2713,-6.1074");
+            dataBaseHandler.addClimb("Graham Crackers", "5a", "~25m","super fab",climb3,"53.2713,-6.1074");
+            dataBaseHandler.addClimb("Paradise Lost", "4a", "~20m","super super fab",climb1,"53.2713,-6.1074");
+            dataBaseHandler.addClimb("Stereo-Tentacles", "5a", "~15m","super super super fab",climb3,"53.2713,-6.1074");
             Log.d("DB", "added some climbs");
 
 

@@ -1,6 +1,7 @@
 
 package nils.and.lamp.app.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -36,6 +37,7 @@ public class ClimbDetailView extends AppCompatActivity {
     private Spinner length;
     private TextView name;
     private EditText desc;
+    private Context context;
 
     private Climb climb;
     private ClimbDataBaseHandler database;
@@ -44,6 +46,8 @@ public class ClimbDetailView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_climb_detail_view);
+
+        context = this;
 
         Intent intent = getIntent();
         climb = (Climb) intent.getSerializableExtra("Climb");
@@ -80,6 +84,7 @@ public class ClimbDetailView extends AppCompatActivity {
 
         Button commit = (Button) findViewById(R.id.detailview_commit_button);
         Button delete = (Button) findViewById(R.id.detailview_delete_button);
+        Button showOnMap = (Button) findViewById(R.id.detailview_go_gps_button);
 
         commit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +111,22 @@ public class ClimbDetailView extends AppCompatActivity {
                 }
             }
         );
+
+        showOnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (climb.getGpsCoords() != null) {
+                    Uri gmmIntentUri = Uri.parse("geo:" + climb.getGpsCoords() + "?q=" + climb.getGpsCoords());
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(mapIntent);
+                    }
+                } else {
+                    Toast.makeText(context, "No Coordinatess For This Climb :(", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
 
     }

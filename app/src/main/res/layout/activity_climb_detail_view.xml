@@ -125,7 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/detailview_container_desc"
-            android:text="@string/button_text_commit"
+            android:text="@string/button_text_update"
             android:textColor="?attr/colorPrimary" />
 
         <Button
@@ -137,6 +137,17 @@
             android:layout_toRightOf="@id/detailview_commit_button"
             android:text="@string/button_text_delete"
             android:textColor="?attr/colorAccent" />
+
+        <Button
+            android:id="@+id/detailview_go_gps_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_text_go_gps"
+            android:textColor="?attr/colorPrimary"
+            android:layout_alignBaseline="@+id/detailview_delete_button"
+            android:layout_alignBottom="@+id/detailview_delete_button"
+            android:layout_toEndOf="@+id/detailview_delete_button" />
     </RelativeLayout>
 
 </FrameLayout>

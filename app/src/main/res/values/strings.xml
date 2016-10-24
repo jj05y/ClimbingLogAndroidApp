@@ -23,6 +23,7 @@
     <string name="button_text_update">Update</string>
     <string name="button_text_reset">Reset</string>
     <string name="button_text_delete">Delete</string>
+    <string name="button_text_go_gps">Show on Map</string>
     <string name="label_title">Title</string>
     <string name="label_desc">Description</string>
     <string name="pick_image">Image: Pick or Capture</string>
