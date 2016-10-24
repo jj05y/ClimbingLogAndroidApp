@@ -1,5 +1,6 @@
 package nils.and.lamp.app.Activities;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,8 +35,8 @@ import nils.and.lamp.app.R;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ClimbBrowser.OnFragmentInteractionListener, ClimbCreator.OnFragmentInteractionListener, TestGps.OnFragmentInteractionListener {
 
-    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 9998;
     private ClimbDataBaseHandler dataBaseHandler;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        context = this;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -53,27 +56,29 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        if (dataBaseHandler == null) {
-            dataBaseHandler = new ClimbDataBaseHandler(getApplicationContext());
-        }
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (dataBaseHandler == null) {
+                    dataBaseHandler = new ClimbDataBaseHandler(context);
+                }
+                if (dataBaseHandler.isEmpty()) {
+                    //Toast.makeText(context, "Filling Database with pre-loaded climbs", Toast.LENGTH_SHORT).show();
+                    Bitmap climb1 = BitmapFactory.decodeResource(getResources(), R.drawable.climb1);
+                    Bitmap climb3 = BitmapFactory.decodeResource(getResources(), R.drawable.climb3);
 
-        if (dataBaseHandler.isEmpty()) {
+                    dataBaseHandler.addClimb("Street Fighter", "4c", "~10m","fab", climb1, "53.2713,-6.1074");
+                    dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "~20m","super fab",climb3,"53.2713,-6.1074");
+                    dataBaseHandler.addClimb("Graham Crackers", "5a", "~25m","super fab",climb3,"53.2713,-6.1074");
+                    dataBaseHandler.addClimb("Paradise Lost", "4a", "~20m","super super fab",climb1,"53.2713,-6.1074");
+                    dataBaseHandler.addClimb("Stereo-Tentacles", "5a", "~15m","super super super fab",climb3,"53.2713,-6.1074");
+                    Log.d("DB", "added some climbs");
+                    //Toast.makeText(context, "Finished loading climbs", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).start();
 
-            Bitmap climb1 = BitmapFactory.decodeResource(getResources(), R.drawable.climb1);
-            Bitmap climb3 = BitmapFactory.decodeResource(getResources(), R.drawable.climb3);
-
-
-            //TODO thread this
-            dataBaseHandler.addClimb("Street Fighter", "4c", "~10m","fab", climb1, "53.2713,-6.1074");
-            dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "~20m","super fab",climb3,"53.2713,-6.1074");
-            dataBaseHandler.addClimb("Graham Crackers", "5a", "~25m","super fab",climb3,"53.2713,-6.1074");
-            dataBaseHandler.addClimb("Paradise Lost", "4a", "~20m","super super fab",climb1,"53.2713,-6.1074");
-            dataBaseHandler.addClimb("Stereo-Tentacles", "5a", "~15m","super super super fab",climb3,"53.2713,-6.1074");
-            Log.d("DB", "added some climbs");
-
-
-        }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -119,6 +124,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //TODO preferences fragment :( not sure about the implications of this
             return true;
         }
 
@@ -130,57 +136,31 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (id == R.id.nav_browse) {
-            // Handle the joe action
-            // Create a new fragment and specify the planet to show based on position
-            Fragment fragment = new ClimbBrowser();
-
-
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame_frag, fragment)
+                    .replace(R.id.frame_frag, new ClimbBrowser())
                     .commit();
 
-            // Highlight the selected item, update the title, and close the drawer
-          //  mDrawerList.setItemChecked(position, true);
-         //   setTitle(mPlanetTitles[position]);
-         //   mDrawerLayout.closeDrawer(mDrawerList);
+            setTitle("Browse Climbs");
         } else if (id == R.id.nav_create) {
-            // Handle the joe action
-            // Create a new fragment and specify the planet to show based on position
-            Fragment fragment = new ClimbCreator();
-
-
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame_frag, fragment)
+                    .replace(R.id.frame_frag, new ClimbCreator())
                     .commit();
 
-            // Highlight the selected item, update the title, and close the drawer
-            //  mDrawerList.setItemChecked(position, true);
-            //   setTitle(mPlanetTitles[position]);
-            //   mDrawerLayout.closeDrawer(mDrawerList);
-
-     /*   } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {*/
-
+               setTitle("Climb Creator");
         } else if (id == R.id.nav_search) {
             Toast.makeText(this, "Retrieving Online Database", Toast.LENGTH_SHORT).show();
             Toast.makeText(this, "Na, Just Kidding", Toast.LENGTH_SHORT).show();
 
+            setTitle("Browse Online");
         } else if (id == R.id.nav_gps) {
-            Fragment fragment = new TestGps();
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame_frag, fragment)
+                    .replace(R.id.frame_frag, new TestGps())
                     .commit();
 
-
+            setTitle("PANTS");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
