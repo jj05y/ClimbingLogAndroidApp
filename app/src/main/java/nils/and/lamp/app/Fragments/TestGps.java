@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,6 @@ public class TestGps extends Fragment implements GoogleApiClient.ConnectionCallb
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_FINE_LOCATION);
             }
-
         } else {
             buildGoogleApiClient();
         }
@@ -120,18 +120,15 @@ public class TestGps extends Fragment implements GoogleApiClient.ConnectionCallb
         Toast.makeText(getActivity(), "hi", Toast.LENGTH_SHORT).show();
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getActivity(), "Thank you for permission", Toast.LENGTH_SHORT).show();
+                    // permission was granted, yay!
                     buildGoogleApiClient();
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+
 
                 } else {
                     Toast.makeText(getActivity(), "You need permission", Toast.LENGTH_SHORT).show();
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    // permission denied, boo!
                 }
                 return;
             }
@@ -154,6 +151,7 @@ public class TestGps extends Fragment implements GoogleApiClient.ConnectionCallb
     public void onConnected(Bundle bundle) {
         requestLastLocation();
         createLocationRequest();
+
     }
 
     @Override
@@ -168,6 +166,24 @@ public class TestGps extends Fragment implements GoogleApiClient.ConnectionCallb
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d("loc", "Location Changed");
+        System.out.println("lols");
+
+        requestLastLocation();
+        latitude = mLastLocation.getLatitude();
+        longitude = mLastLocation.getLongitude();
+        text.setText(latitude + "      " + longitude);
+        Log.d("loc", "lat long " + latitude + "," + longitude);
+
+    }
+
+    void requestLastLocation() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getActivity(), "Failed at permission for getting location", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
 
     }
 
@@ -183,17 +199,6 @@ public class TestGps extends Fragment implements GoogleApiClient.ConnectionCallb
         }
     }
 
-    void requestLastLocation() {
-
-
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getActivity(), "Failed at permission for getting location", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-
-
-    }
 
     protected void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -203,7 +208,6 @@ public class TestGps extends Fragment implements GoogleApiClient.ConnectionCallb
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, this);
         Toast.makeText(getActivity(), "starting updates", Toast.LENGTH_SHORT).show();
     }
-
 
 
 
@@ -243,7 +247,6 @@ public class TestGps extends Fragment implements GoogleApiClient.ConnectionCallb
 
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 

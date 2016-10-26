@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,14 +75,40 @@ public class ClimbListAdapter extends BaseAdapter {
         textDescription.setText(climbs.get(i).getDescription());
 
         String imageKey = climbs.get(i).getPhoto();
-        //TODO thread this
-        Bitmap image = (new ClimbDataBaseHandler(context)).getPicture(imageKey);
-        imageView.setImageDrawable(new BitmapDrawable(context.getResources(), image));
+        (new ImageLoader(imageView)).execute(imageKey);
 
         return myInflatedView;
     }
 
     public Vector<Climb> getClimbs() {
         return climbs;
+    }
+
+    private class ImageLoader extends AsyncTask<String,Void,Void> {
+
+        private ImageView imageView;
+        private Bitmap image;
+        private String climbName;
+
+        public ImageLoader(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            climbName = strings[0];
+            Log.d("thread", "Loading Image for " + strings[0]);
+            for (String string : strings) image = (new ClimbDataBaseHandler(context)).getPicture(string);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (image!= null) imageView.setImageDrawable(new BitmapDrawable(context.getResources(), image));
+            Log.d("thread", "Loaded Image for " + climbName);
+
+        }
     }
 }

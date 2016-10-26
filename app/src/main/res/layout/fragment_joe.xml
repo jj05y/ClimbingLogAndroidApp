@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     tools:context="nils.and.lamp.app.Fragments.ClimbBrowser">
 
-    <!-- TODO: Update blank fragment layout -->
 
 
     <ListView

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,6 +42,7 @@ public class ClimbDetailView extends AppCompatActivity {
 
     private Climb climb;
     private ClimbDataBaseHandler database;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +57,10 @@ public class ClimbDetailView extends AppCompatActivity {
 
         database = new ClimbDataBaseHandler(this);
 
-        ImageView imageView = (ImageView) findViewById(R.id.detailview_image);
 
-        //TODO thread this
-        Bitmap image = database.getPicture(climb.getName());
-        imageView.setImageDrawable(new BitmapDrawable(getResources(), image));
+        imageView = (ImageView) findViewById(R.id.detailview_image);
+
+        (new ImageLoader()).execute(climb.getName());
 
         name = (TextView) findViewById(R.id.detailview_title);
         name.setText(climb.getName());
@@ -93,10 +94,8 @@ public class ClimbDetailView extends AppCompatActivity {
                 String d = desc.getText().toString();
                 String g = grade.getSelectedItem().toString();
                 String l = length.getSelectedItem().toString();
+                (new ClimbUpdater()).execute(n,d,g,l);
                 climb.setName(name.getText().toString()); //need to update this just in-case deleted after changing
-                //TODO thread this
-                database.updateClimb(n, g, l, d);
-                Toast.makeText(getApplicationContext(), "climb updated", Toast.LENGTH_SHORT).show();
                 ClimbDetailView.super.onBackPressed();
             }
         });
@@ -104,9 +103,7 @@ public class ClimbDetailView extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO thread this
-                    database.deleteClimb(climb.getName());
-                    Toast.makeText(getApplicationContext(), "climb deleted", Toast.LENGTH_SHORT).show();
+                    (new ClimbDeleter()).execute(climb.getName());
                     ClimbDetailView.super.onBackPressed();
                 }
             }
@@ -129,5 +126,71 @@ public class ClimbDetailView extends AppCompatActivity {
         });
 
 
+    }
+
+    private class ImageLoader extends AsyncTask<String,Void,Void> {
+
+        Bitmap image;
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            Log.d("thread", "Loading Image");
+            for (String string : strings) image = database.getPicture(string);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (image != null) {
+                imageView.setImageDrawable(new BitmapDrawable(getResources(), image));
+            }
+            Log.d("thread", "Image Loaded");
+
+        }
+    }
+    private class ClimbUpdater extends AsyncTask<String,Void,Void> {
+
+        Bitmap image;
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            Log.d("thread", "Updating Climb");
+            String n = strings[0];
+            String d = strings[1];
+            String g = strings[2];
+            String l = strings[3];
+            database.updateClimb(n, g, l, d);
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(context, "Climb Updated", Toast.LENGTH_SHORT).show();
+            Log.d("thread", "Climb Updated");
+
+        }
+    }
+    private class ClimbDeleter extends AsyncTask<String,Void,Void> {
+
+
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            Log.d("thread", "Deleting Climb" );
+            for (String string : strings) database.deleteClimb(string);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(context, "Climb Deleted", Toast.LENGTH_SHORT).show();
+            Log.d("thread", "Climb Deleted");
+
+        }
     }
 }
