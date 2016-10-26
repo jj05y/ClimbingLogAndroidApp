@@ -9,7 +9,7 @@
             android:entries="@array/entries_list_unit_array"
             android:entryValues="@array/entries_list_unit_array"
             android:key="unit_preference"
-            android:summary="@string/summary_units"
+            android:summary="%s"
             android:title="@string/dialog_title_select_units"
             android:defaultValue="@string/default_units"/>
     </PreferenceCategory>

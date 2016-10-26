@@ -3,10 +3,12 @@ package nils.and.lamp.app.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -81,7 +83,9 @@ public class ClimbDetailView extends AppCompatActivity {
 
         grade.setSelection(gradeAdapter.getPosition(climb.getGrade()), true);
         length.setSelection(gradeAdapter.getPosition(climb.getLength()), true);
-
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String units = prefs.getString("unit_preference", "Metric");
+        Log.d("prefs","Chosen Units: " + units );
 
         Button commit = (Button) findViewById(R.id.detailview_commit_button);
         Button delete = (Button) findViewById(R.id.detailview_delete_button);
