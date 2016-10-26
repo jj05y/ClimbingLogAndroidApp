@@ -30,4 +30,8 @@
         <item>~45m</item>
         <item>~50m</item>
     </string-array>
+    <string-array name="entries_list_unit_array">
+        <item>Metric</item>
+        <item>Imperial</item>
+    </string-array>
 </resources>

@@ -34,4 +34,10 @@
     <string name="createLogLength">key_createLength</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="preference_units">Units</string>
+    <string name="dialog_title_select_units">Select Units</string>
+    <string name="summary_units">Select which units to use</string>
+    <string name="default_units">Metric</string>
+
+
 </resources>

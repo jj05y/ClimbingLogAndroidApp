@@ -1,18 +1,13 @@
 package nils.and.lamp.app.Activities;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
 import android.support.design.widget.NavigationView;
@@ -29,6 +24,7 @@ import android.widget.Toast;
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
 import nils.and.lamp.app.Fragments.ClimbBrowser;
 import nils.and.lamp.app.Fragments.ClimbCreator;
+import nils.and.lamp.app.Fragments.PrefsFragment;
 import nils.and.lamp.app.Fragments.TestGps;
 import nils.and.lamp.app.R;
 
@@ -123,7 +119,9 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            //TODO preferences fragment :( not sure about the implications of this
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.frame_frag, new PrefsFragment())
+                    .commit();
             return true;
         }
 
