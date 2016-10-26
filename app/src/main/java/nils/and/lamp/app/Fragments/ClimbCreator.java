@@ -159,9 +159,10 @@ public class ClimbCreator extends Fragment {
                                         }
                                         tempFileName = pants.getAbsolutePath();
                                         Uri uri = Uri.fromFile(pants);
-                                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                                        startActivityForResult(intent, pickCamera);
+                                        Intent takePictureIndent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                        if (takePictureIndent.resolveActivity(getActivity().getPackageManager())!=null){
+                                            startActivityForResult(takePictureIndent,pickCamera);
+                                        }
                                         break;
                                     case 0:
                                         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
@@ -348,8 +349,9 @@ public class ClimbCreator extends Fragment {
                         }
                         new backgroundImageLoader(rootView).execute(tempFileName);
                     } else {
-                        imageUri = imageReturnedIntent.getData();
-                        imageContainer.setImageURI(imageUri);
+                        Bundle extras = imageReturnedIntent.getExtras();
+                        imageBitmap = (Bitmap) extras.get("data");
+                        imageContainer.setImageBitmap(imageBitmap);
                     }
                 }
                 break;
