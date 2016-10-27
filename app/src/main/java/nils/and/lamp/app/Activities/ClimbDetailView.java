@@ -21,15 +21,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.io.File;
 
 import nils.and.lamp.app.Core.Climb;
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
 import nils.and.lamp.app.R;
 
-import static java.security.AccessController.getContext;
 
 public class ClimbDetailView extends AppCompatActivity {
 
@@ -82,10 +78,8 @@ public class ClimbDetailView extends AppCompatActivity {
         length.setAdapter(lengthAdapter);
 
         grade.setSelection(gradeAdapter.getPosition(climb.getGrade()), true);
-        length.setSelection(gradeAdapter.getPosition(climb.getLength()), true);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String units = prefs.getString("unit_preference", "Metric");
-        Log.d("prefs","Chosen Units: " + units );
+        length.setSelection(lengthAdapter.getPosition(climb.getLength()), true);
+
 
         Button commit = (Button) findViewById(R.id.detailview_commit_button);
         Button delete = (Button) findViewById(R.id.detailview_delete_button);

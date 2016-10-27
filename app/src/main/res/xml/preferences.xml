@@ -2,16 +2,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <PreferenceCategory android:title="@string/preference_units">
+    <PreferenceCategory android:title="@string/Animal">
 
         <ListPreference
-            android:dialogTitle="@string/dialog_title_select_units"
-            android:entries="@array/entries_list_unit_array"
-            android:entryValues="@array/entries_list_unit_array"
-            android:key="unit_preference"
+            android:dialogTitle="@string/dialog_title_select_animal"
+            android:entries="@array/entries_list_animal_array"
+            android:entryValues="@array/entries_list_animal_array"
+            android:key="animal_preference"
             android:summary="%s"
-            android:title="@string/dialog_title_select_units"
-            android:defaultValue="@string/default_units"/>
+            android:title="@string/dialog_title_select_animal"
+            android:defaultValue="@string/default_animal"/>
     </PreferenceCategory>
 
 

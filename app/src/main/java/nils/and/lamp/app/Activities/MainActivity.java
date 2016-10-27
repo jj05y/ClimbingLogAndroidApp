@@ -1,9 +1,12 @@
 package nils.and.lamp.app.Activities;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.Random;
+
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
 import nils.and.lamp.app.Fragments.ClimbBrowser;
 import nils.and.lamp.app.Fragments.ClimbCreator;
@@ -33,6 +38,7 @@ public class MainActivity extends AppCompatActivity
 
     private ClimbDataBaseHandler dataBaseHandler;
     private Context context;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +48,41 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         context = this;
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String animal = prefs.getString("animal_preference", "Duck");
+        Log.d("prefs","Chosen Animal: " + animal);
+
+        switch (animal) {
+            case "Pig":
+                fab.setImageResource(R.drawable.pig);
+                break;
+            case "Duck":
+                fab.setImageResource(R.drawable.duck);
+                break;
+            default:
+                fab.setImageResource(R.drawable.duck);
+        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Quack Quack", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String animal = prefs.getString("animal_preference", "Duck");
+                switch (animal) {
+                    case "Pig":
+                        Snackbar.make(view, "Oink Oink", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                        break;
+                    case "Duck":
+                        Snackbar.make(view, "Quack Quack", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                        break;
+                    default:
+                        Snackbar.make(view, "Quack Quack", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                }
+                Random rnd = new Random();
+                int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                fab.setRippleColor(color);
+
             }
         });
 

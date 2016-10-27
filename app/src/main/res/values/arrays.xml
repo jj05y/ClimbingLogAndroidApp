@@ -30,8 +30,8 @@
         <item>~45m</item>
         <item>~50m</item>
     </string-array>
-    <string-array name="entries_list_unit_array">
-        <item>Metric</item>
-        <item>Imperial</item>
+    <string-array name="entries_list_animal_array">
+        <item>Duck</item>
+        <item>Pig</item>
     </string-array>
 </resources>

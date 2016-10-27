@@ -132,7 +132,7 @@ public class ClimbCreator extends Fragment {
                 Log.d(TAG, "it thinks i need to show rational...as if i care lmao");
             }
             // No explanation needed, we can request the permission.
-            ActivityCompat.requestPermissions(this.getActivity(),
+            requestPermissions(
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     externalStoragePermissionRequestCode);
         } else {
