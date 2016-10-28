@@ -2,6 +2,7 @@ package nils.and.lamp.app.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,7 +42,7 @@ public class ClimbBrowser extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_joe, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_climb_browser, container, false);
         Log.d("FRAG", "create");
         climbsList = (ListView) rootView.findViewById(R.id.listview_climbs);
 
@@ -88,6 +89,8 @@ public class ClimbBrowser extends Fragment {
             ((ClimbListAdapter)climbsList.getAdapter()).notifyDataSetChanged();
         }
         super.onResume();
+        getView().setBackgroundColor(Color.WHITE);
+
     }
 
     @Override

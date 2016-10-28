@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -114,7 +115,7 @@ public class ClimbCreator extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_nils, container, false);
+        rootView = inflater.inflate(R.layout.fragment_climb_creator, container, false);
 
         if (savedInstanceState != null) {
             // restore camera capture temp filename
@@ -421,6 +422,13 @@ public class ClimbCreator extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getView().setBackgroundColor(Color.WHITE);
+
     }
 
     /**

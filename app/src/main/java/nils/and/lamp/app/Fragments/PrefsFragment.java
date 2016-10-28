@@ -3,6 +3,7 @@ package nils.and.lamp.app.Fragments;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -13,12 +14,20 @@ import nils.and.lamp.app.R;
 public class PrefsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 
+    private EditTextPreference nameEditTextpref;
+    private EditTextPreference descEditTextpref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences);
+
+        nameEditTextpref = (EditTextPreference) findPreference("default_name");
+        nameEditTextpref.setSummary(nameEditTextpref.getText());
+
+        descEditTextpref = (EditTextPreference) findPreference("default_desc");
+        descEditTextpref.setSummary(descEditTextpref.getText());
 
     }
 
@@ -43,9 +52,16 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
             case "Duck":
                 fab.setImageResource(R.drawable.duck);
                 break;
+            case "Donkey":
+                fab.setImageResource(R.drawable.donkey);
+                break;
             default:
                 fab.setImageResource(R.drawable.duck);
         }
+        nameEditTextpref.setSummary(nameEditTextpref.getText());
+        descEditTextpref.setSummary(nameEditTextpref.getText());
+
+
     }
 
     @Override

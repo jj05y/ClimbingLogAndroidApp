@@ -2,6 +2,43 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
+    <PreferenceCategory android:title="@string/Defaults">
+
+        <EditTextPreference
+            android:dialogTitle="@string/dialog_title_select_default_name"
+            android:key="default_name"
+            android:title="@string/dialog_title_select_default_name"
+            android:persistent="true"
+            android:defaultValue="" />
+
+        <ListPreference
+            android:dialogTitle="@string/dialog_title_select_default_grade"
+            android:entries="@array/grade_array"
+            android:entryValues="@array/grade_array"
+            android:key="default_grade"
+            android:summary="%s"
+            android:title="@string/dialog_title_select_default_grade"
+            android:defaultValue="@string/default_grade"/>
+
+        <ListPreference
+            android:dialogTitle="@string/dialog_title_select_default_length"
+            android:entries="@array/length_array"
+            android:entryValues="@array/length_array"
+            android:key="default_length"
+            android:summary="%s"
+            android:title="@string/dialog_title_select_default_length"
+            android:defaultValue="@string/default_length"/>
+
+        <EditTextPreference
+            android:dialogTitle="@string/dialog_title_select_default_desc"
+            android:key="default_desc"
+            android:title="@string/dialog_title_select_default_desc"
+            android:persistent="true"
+            android:defaultValue="" />
+
+    </PreferenceCategory>
+
+
     <PreferenceCategory android:title="@string/Animal">
 
         <ListPreference
@@ -13,6 +50,8 @@
             android:title="@string/dialog_title_select_animal"
             android:defaultValue="@string/default_animal"/>
     </PreferenceCategory>
+
+
 
 
 </PreferenceScreen>

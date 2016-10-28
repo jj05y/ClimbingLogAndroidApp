@@ -60,6 +60,9 @@ public class MainActivity extends AppCompatActivity
             case "Duck":
                 fab.setImageResource(R.drawable.duck);
                 break;
+            case "Donkey":
+                fab.setImageResource(R.drawable.donkey);
+                break;
             default:
                 fab.setImageResource(R.drawable.duck);
         }
@@ -76,6 +79,10 @@ public class MainActivity extends AppCompatActivity
                     case "Duck":
                         Snackbar.make(view, "Quack Quack", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                         break;
+                    case "Donkey":
+                        Snackbar.make(view, "DONKEY!!!", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                        break;
+
                     default:
                         Snackbar.make(view, "Quack Quack", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 }

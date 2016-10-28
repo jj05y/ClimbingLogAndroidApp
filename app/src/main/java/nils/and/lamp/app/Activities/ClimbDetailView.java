@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,12 +51,12 @@ public class ClimbDetailView extends AppCompatActivity {
 
         context = this;
 
+
         Intent intent = getIntent();
         climb = (Climb) intent.getSerializableExtra("Climb");
         Log.d("FRAG", "WOOOO: " + climb);
 
         database = new ClimbDataBaseHandler(this);
-
 
         imageView = (ImageView) findViewById(R.id.detailview_image);
 

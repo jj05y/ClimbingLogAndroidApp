@@ -39,6 +39,13 @@
     <string name="dialog_title_select_animal">Select Animal</string>
     <string name="summary_units">Select which animal to use</string>
     <string name="default_animal">Duck</string>
+    <string name="Defaults">Defaults</string>
+    <string name="dialog_title_select_default_grade">Default Grade</string>
+    <string name="default_grade">4a</string>
+    <string name="dialog_title_select_default_length">Default Length</string>
+    <string name="default_length">~10m</string>
+    <string name="dialog_title_select_default_name">Default Climb Name</string>
+    <string name="dialog_title_select_default_desc">Default Description</string>
 
 
 </resources>

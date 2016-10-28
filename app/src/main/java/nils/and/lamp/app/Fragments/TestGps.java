@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -242,9 +243,12 @@ public class TestGps extends Fragment implements GoogleApiClient.ConnectionCallb
         mListener = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getView().setBackgroundColor(Color.WHITE);
 
-
-
+    }
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);

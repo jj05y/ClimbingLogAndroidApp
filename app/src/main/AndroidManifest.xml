@@ -21,7 +21,8 @@
         </activity>
         <activity
             android:name="nils.and.lamp.app.Activities.ClimbDetailView"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+        </activity>
     </application>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- this line is future proof -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

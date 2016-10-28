@@ -33,5 +33,6 @@
     <string-array name="entries_list_animal_array">
         <item>Duck</item>
         <item>Pig</item>
+        <item>Donkey</item>
     </string-array>
 </resources>
