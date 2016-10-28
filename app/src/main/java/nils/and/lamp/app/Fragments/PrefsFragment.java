@@ -55,6 +55,9 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
             case "Donkey":
                 fab.setImageResource(R.drawable.donkey);
                 break;
+            case "Goat":
+                fab.setImageResource(R.drawable.goat);
+                break;
             default:
                 fab.setImageResource(R.drawable.duck);
         }

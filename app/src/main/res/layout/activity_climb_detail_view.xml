@@ -19,16 +19,6 @@
             android:src="@drawable/placeholder"
             tools:src="@drawable/placeholder" />
 
-        <TextView
-            android:id="@+id/detailview_title_viewonly"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/createlog_title_height"
-            android:layout_alignBottom="@+id/detailview_image"
-            android:layout_marginLeft="@dimen/md_keylines"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/colorPrimaryDark"
-            tools:text="@string/log_title" />
-
         <android.support.v7.widget.LinearLayoutCompat
             android:id="@+id/detailview_container_title"
             android:layout_width="match_parent"
