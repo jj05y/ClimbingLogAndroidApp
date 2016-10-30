@@ -71,6 +71,7 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    public static final double NO_COORDS = 9999.9;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -135,6 +136,7 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        latitude = longitude = NO_COORDS;
     }
 
     @Override
@@ -290,7 +292,8 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
                     String desc = editDesc.getText().toString();
                     String g = grade.getSelectedItem().toString();
                     String l = length.getSelectedItem().toString();
-                    database.addClimb(title, g, l, desc, imageBitmap, null);
+                    String coords = (latitude != NO_COORDS && longitude != NO_COORDS) ? latitude + "," + longitude: null;
+                    database.addClimb(title, g, l, desc, imageBitmap, coords);
                     Toast.makeText(getContext(), "climb log added to database", Toast.LENGTH_SHORT).show();
                     // this is to prevent double tap commit to overload DB
                     imageBitmap = null;
