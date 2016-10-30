@@ -139,6 +139,8 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
 
             } while (cursor.moveToNext());
         }
+
+        cursor.close();
         db.close();
 
         return image;
@@ -172,7 +174,7 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
 
        private byte[] createByteArray(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 92, stream);
         return stream.toByteArray();
     }
 
