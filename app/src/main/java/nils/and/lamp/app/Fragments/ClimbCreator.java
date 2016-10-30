@@ -8,8 +8,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -33,6 +35,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
 import java.io.File;
 
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
@@ -49,7 +57,7 @@ import static android.app.Activity.RESULT_OK;
  * Use the {@link ClimbCreator#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ClimbCreator extends Fragment {
+public class ClimbCreator extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -60,6 +68,12 @@ public class ClimbCreator extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private Location mLastLocation;
+    private LocationRequest mLocationRequest;
+    private double latitude;
+    private double longitude;
+    private final int FINE_LOCATION_REQUEST_CODE = 601;
 
     private TextView readonlyTitle;
     private AppCompatEditText editTitle;
@@ -139,7 +153,16 @@ public class ClimbCreator extends Fragment {
         } else {
             Log.d("permission", "granted..?");
         }
-
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                buildGoogleApiClient();
+            } else {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        FINE_LOCATION_REQUEST_CODE);
+            }
+        } else {
+            buildGoogleApiClient();
+        }
         //picky dialog
         imageContainer = (ImageView) rootView.findViewById(R.id.createlog_image);
         imageContainer.setOnClickListener(new View.OnClickListener() {
@@ -444,5 +467,84 @@ public class ClimbCreator extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    protected GoogleApiClient googleApiClient;
+    protected synchronized void buildGoogleApiClient() {
+        googleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        googleApiClient.connect();
+    }
+    @Override
+    public void onConnected(Bundle bundle) {
+        requestLastLocation();
+        createLocationRequest();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d("loc", "Location Changed");
+        System.out.println("lols");
+
+        requestLastLocation();
+        latitude = mLastLocation.getLatitude();
+        longitude = mLastLocation.getLongitude();
+        Log.d("loc", "lat long " + latitude + "," + longitude);
+
+    }
+
+    void requestLastLocation() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getActivity(), "Failed at permission for getting location", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+    }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        //API23 requirement
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            startLocationUpdates();
+        }
+    }
+
+    protected void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getActivity(), "Failed at permission for getting location", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, this);
+        Toast.makeText(getActivity(), "starting updates", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
+    }
+    @Override
+    public void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
     }
 }
