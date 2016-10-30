@@ -7,8 +7,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -19,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
@@ -42,7 +46,12 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
+import nils.and.lamp.app.BuildConfig;
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
 import nils.and.lamp.app.R;
 
@@ -86,6 +95,8 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
     private final int pickGallery = 401; // whatever code that is
     private final int pickCamera = 402; // whatever code that is
     private final int externalStoragePermissionRequestCode = 404;
+    private final int LOAD_FROM_FILENAME = 803;
+    private final int LOAD_FROM_URI = 807;
     private String tempFileName; //camera capture temp filename as string
     private View rootView;
     private Uri imageUri;
@@ -93,6 +104,7 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
 
     private static final String TAG = "CreateLog";
     private Bitmap imageBitmap;
+    private File photoFile; // the file (hope it's neces)
 
     public ClimbCreator() {
         // Required empty public constructor
@@ -134,6 +146,7 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
         if (savedInstanceState != null) {
             // restore camera capture temp filename
             tempFileName = savedInstanceState.getString(getString(R.string.cameraCaptureTempFilename));
+            new backgroundImageLoader(rootView).execute(LOAD_FROM_FILENAME);
         }
         database= new ClimbDataBaseHandler(getActivity());
 
@@ -176,17 +189,7 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
                                 // of the selected item
                                 switch (which) {
                                     case 1:
-                                        File pants = getTempCaptureFile();
-                                        if (pants == null) {
-                                            Log.e(TAG, "sorry m8, no write permission, no camera");
-                                            break;
-                                        }
-                                        tempFileName = pants.getAbsolutePath();
-                                        Uri uri = Uri.fromFile(pants);
-                                        Intent takePictureIndent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                        if (takePictureIndent.resolveActivity(getActivity().getPackageManager())!=null){
-                                            startActivityForResult(takePictureIndent,pickCamera);
-                                        }
+                                        dispatchTakePictureIntent();
                                         break;
                                     case 0:
                                         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
@@ -282,13 +285,14 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
         commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (imageBitmap!= null) {
+                if (imageBitmap != null) {
                     String title = editTitle.getText().toString();
                     String desc = editDesc.getText().toString();
                     String g = grade.getSelectedItem().toString();
                     String l = length.getSelectedItem().toString();
                     database.addClimb(title, g, l, desc, imageBitmap, null);
                     Toast.makeText(getContext(), "climb log added to database", Toast.LENGTH_SHORT).show();
+                    // this is to prevent double tap commit to overload DB
                     imageBitmap = null;
                 } else {
                     Toast.makeText(getActivity(), "Add an image first", Toast.LENGTH_SHORT).show();
@@ -299,36 +303,117 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
         return rootView;
     }
 
-    File getTempCaptureFile() {
-        File dir = new File(Environment.getExternalStorageDirectory(),
-                getString(getActivity().getApplicationInfo().labelRes));
-        if (!dir.exists()) {
-            if (!dir.mkdirs()) {
-                Log.e(TAG, "wtf, I thought you got permission?");
-                return null;
-            }
-        }
-        String tempFilename = "capture"
-                + ((Long) (System.currentTimeMillis() / 1000)).toString()
-                + ".jpg";
-        return new File(dir, tempFilename);
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String imageFileName = getAppName().replace(" ", "_") + "-" + timeStamp + "-";
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM), "Camera");
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        tempFileName = image.getAbsolutePath();
+        return image;
     }
 
-    private class backgroundImageLoader extends AsyncTask<String, int[], Bitmap> {
+    private String getAppName() {
+        return getString(getActivity().getApplicationInfo().labelRes);
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                Log.e(TAG, ex.getMessage());
+                tempFileName = null;
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                        BuildConfig.APPLICATION_ID + ".provider",
+                        photoFile);
+                Log.d(TAG, photoURI.toString());
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, pickCamera);
+            }
+        }
+    }
+
+    private class backgroundImageLoader extends AsyncTask<Integer, int[], Bitmap> {
+        private final int width;
+        private final int height;
         View view;
 
         backgroundImageLoader(View rootView) {
             this.view = rootView;
+            ImageView img = (ImageView) view.findViewById(R.id.createlog_image);
+            this.width = img.getWidth();
+            this.height = img.getHeight();
+            Log.d(TAG, "imgV size w:" + width + ", h:" + height);
         }
 
         @Override
-        protected Bitmap doInBackground(String... strings) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(strings[0], options);
-            options.inSampleSize = calculateInSampleSize(options, 400, 640);
-            options.inJustDecodeBounds = false;
-            return BitmapFactory.decodeFile(strings[0], options);
+        protected Bitmap doInBackground(Integer... args) {
+            Bitmap ret;
+            switch (args[0]) {
+                case LOAD_FROM_FILENAME:
+                    // Get the size of the image
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    bmOptions.inJustDecodeBounds = true;
+
+                    BitmapFactory.decodeFile(tempFileName, bmOptions);
+                    int photoW = bmOptions.outWidth;
+                    int photoH = bmOptions.outHeight;
+
+                    // Figure out which way needs to be reduced less, chose max for very aggressive resize
+                    int scaleFactor = 1;
+                    if ((width > 0) || (height > 0)) {
+                        scaleFactor = Math.max(photoW / width, photoH / height);
+                    }
+
+                    // Set bitmap options to scale the image decode target
+                    bmOptions.inJustDecodeBounds = false;
+                    bmOptions.inSampleSize = scaleFactor;
+
+                    ret = BitmapFactory.decodeFile(tempFileName, bmOptions);
+                    Log.d(TAG, "original bitmap size w:" + ret.getWidth() + ", h:" + ret.getHeight());
+                    Log.d(TAG, "original bitmap byte count:" + ret.getByteCount());
+                    if (ret.getByteCount() > 5 * 1024 * 1024) {
+                        Bitmap instagramme = instagram(ret);
+                        Log.d(TAG, "instagram bitmap size w:" + instagramme.getWidth() + ", h:" + instagramme.getHeight());
+                        Log.d(TAG, "instagram bitmap byte count:" + instagramme.getByteCount());
+                        return instagramme;
+                    }
+                    return ret;
+                case LOAD_FROM_URI:
+                    try {
+                        ret = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+                        Log.d(TAG, "original bitmap size w:" + ret.getWidth() + ", h:" + ret.getHeight());
+                        Log.d(TAG, "original bitmap byte count:" + ret.getByteCount());
+                        if (ret.getByteCount() > 5 * 1024 * 1024) {
+                            Bitmap instagramme = instagram(ret);
+                            Log.d(TAG, "instagram bitmap size w:" + instagramme.getWidth() + ", h:" + instagramme.getHeight());
+                            Log.d(TAG, "instagram bitmap byte count:" + instagramme.getByteCount());
+                            return instagramme;
+                        }
+                        return ret;
+                    } catch (IOException e) {
+                        Log.d(TAG, e.getMessage());
+                        imageUri = null;
+                        imageBitmap = null;
+                    }
+                default:
+                    return null;
+            }
         }
 
         @Override
@@ -336,30 +421,27 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
             super.onPostExecute(bitmap);
             ImageView img = (ImageView) view.findViewById(R.id.createlog_image);
             img.setImageBitmap(bitmap);
+            imageBitmap = bitmap;
         }
+    }
 
-        int calculateInSampleSize(
-                BitmapFactory.Options options, int reqWidth, int reqHeight) {
-            // Raw height and width of image
-            final int height = options.outHeight;
-            final int width = options.outWidth;
-            int inSampleSize = 1;
-
-            if (height > reqHeight || width > reqWidth) {
-
-                final int halfHeight = height / 2;
-                final int halfWidth = width / 2;
-
-                // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-                // height and width larger than the requested height and width.
-                while ((halfHeight / inSampleSize) >= reqHeight
-                        && (halfWidth / inSampleSize) >= reqWidth) {
-                    inSampleSize *= 2;
-                }
-            }
-
-            return inSampleSize;
+    private static Bitmap instagram(Bitmap bm) {
+        final int w = 1080, h = 1080;
+        if (bm.getByteCount() >= 5 * 1024 * 1024) {
+            Bitmap mask = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            Canvas board = new Canvas(mask);
+            float scale = w / (float) bm.getWidth();
+            float xT = 0.0f;
+            float yT = (h - bm.getHeight() * scale) / 2.0f;
+            Matrix m = new Matrix();
+            m.postTranslate(xT, yT);
+            m.preScale(scale, scale);
+            Paint p = new Paint();
+            p.setFilterBitmap(true);
+            board.drawBitmap(bm, m, p);
+            return mask;
         }
+        return bm;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
@@ -371,7 +453,7 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
                         if (tempFileName == null || tempFileName.equals("")) {
                             Log.e("Create:onActivityResult", "tempFilename is empty, this should not happen");
                         }
-                        new backgroundImageLoader(rootView).execute(tempFileName);
+                        new backgroundImageLoader(rootView).execute(LOAD_FROM_FILENAME);
                     } else {
                         Bundle extras = imageReturnedIntent.getExtras();
                         imageBitmap = (Bitmap) extras.get("data");
@@ -382,7 +464,8 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
             case pickGallery:
                 if (resultCode == RESULT_OK) {
                     imageUri = imageReturnedIntent.getData();
-                    imageContainer.setImageURI(imageUri);
+                    Log.d(TAG, "Uri " + imageUri.getPath());
+                    new backgroundImageLoader(rootView).execute(LOAD_FROM_URI);
                 }
                 break;
         }
