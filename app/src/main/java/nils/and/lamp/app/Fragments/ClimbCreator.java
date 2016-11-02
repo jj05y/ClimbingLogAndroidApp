@@ -173,24 +173,30 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
         imageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(R.string.pick_image)
-                        .setItems(R.array.pick_image_options, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // The 'which' argument contains the index position
-                                // of the selected item
-                                switch (which) {
-                                    case 1:
-                                        dispatchTakePictureIntent();
-                                        break;
-                                    case 0:
-                                        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                        startActivityForResult(pickPhoto, pickGallery);
+
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.pick_image)
+                            .setItems(R.array.pick_image_options, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // The 'which' argument contains the index position
+                                    // of the selected item
+                                    switch (which) {
+                                        case 1:
+                                            dispatchTakePictureIntent();
+                                            break;
+                                        case 0:
+                                            Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                            startActivityForResult(pickPhoto, pickGallery);
+                                    }
                                 }
-                            }
-                        });
-                builder.create().show();
+                            });
+                    builder.create().show();
+                } else {
+                    Toast.makeText(getActivity(), "No permission", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -499,7 +505,6 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
                     Toast.makeText(getActivity(), "You both permissions to use this app", Toast.LENGTH_SHORT).show();
                     getActivity().onBackPressed();
                     // permission denied, boo!
-
                 }
                 break;
         }
