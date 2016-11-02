@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -83,7 +85,7 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
     private LocationRequest mLocationRequest;
     private double latitude;
     private double longitude;
-    private final int FINE_LOCATION_REQUEST_CODE = 601;
+    private final int PERMISSION_REQUEST_CODE = 601;
 
     private TextView readonlyTitle;
     private AppCompatEditText editTitle;
@@ -150,30 +152,18 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
             tempFileName = savedInstanceState.getString(getString(R.string.cameraCaptureTempFilename));
             new backgroundImageLoader(rootView).execute(LOAD_FROM_FILENAME);
         }
-        database= new ClimbDataBaseHandler(getActivity());
+        database = new ClimbDataBaseHandler(getActivity());
 
-        // check permission
-        int permissionCheck = ContextCompat.checkSelfPermission(this.getContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            Log.d("permission", "not yet granted");
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this.getActivity(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Log.d(TAG, "it thinks i need to show rational...as if i care lmao");
-            }
-            // No explanation needed, we can request the permission.
-            requestPermissions(
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    externalStoragePermissionRequestCode);
-        } else {
-            Log.d("permission", "granted..?");
-        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(this.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ) {
                 buildGoogleApiClient();
             } else {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        FINE_LOCATION_REQUEST_CODE);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        PERMISSION_REQUEST_CODE);
             }
         } else {
             buildGoogleApiClient();
@@ -207,6 +197,8 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
 
         readonlyTitle = (TextView) rootView.findViewById(R.id.createlog_title_viewonly);
         editTitle = (AppCompatEditText) rootView.findViewById(R.id.createlog_title);
+        editTitle.setText(prefs.getString("default_name", ""));
+
 
         // editTitle content will update the colorful readonly title
         editTitle.addTextChangedListener(new TextWatcher() {
@@ -234,6 +226,7 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
 
         // desc field
         editDesc = (AppCompatEditText) rootView.findViewById(R.id.createlog_desc);
+        editDesc.setText(prefs.getString("default_desc", ""));
         editDesc.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -269,6 +262,9 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
         lengthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         length.setAdapter(lengthAdapter);
 
+        grade.setSelection(gradeAdapter.getPosition(prefs.getString("default_grade", "4a")));
+        length.setSelection(lengthAdapter.getPosition(prefs.getString("default_length", "~10m")));
+
         // reset button
         resetAll = (Button) rootView.findViewById(R.id.createlog_reset_button);
         resetAll.setOnClickListener(new View.OnClickListener() {
@@ -287,18 +283,23 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
         commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (imageBitmap != null) {
-                    String title = editTitle.getText().toString();
-                    String desc = editDesc.getText().toString();
-                    String g = grade.getSelectedItem().toString();
-                    String l = length.getSelectedItem().toString();
-                    String coords = (latitude != NO_COORDS && longitude != NO_COORDS) ? latitude + "," + longitude: null;
-                    database.addClimb(title, g, l, desc, imageBitmap, coords);
-                    Toast.makeText(getContext(), "climb log added to database", Toast.LENGTH_SHORT).show();
-                    // this is to prevent double tap commit to overload DB
-                    imageBitmap = null;
+                if ( !editTitle.getText().toString().equals("") && database.isUnique(editTitle.getText().toString())) {
+                    if (imageBitmap != null) {
+                        String title = editTitle.getText().toString();
+                        String desc = editDesc.getText().toString();
+                        String g = grade.getSelectedItem().toString();
+                        String l = length.getSelectedItem().toString();
+                        String coords = (latitude != NO_COORDS && longitude != NO_COORDS) ? latitude + "," + longitude : null;
+                        database.addClimb(title, g, l, desc, imageBitmap, coords);
+                        Toast.makeText(getContext(), "climb log added to database", Toast.LENGTH_SHORT).show();
+                        // this is to prevent double tap commit to overload DB
+                        imageBitmap = null;
+                        getActivity().onBackPressed();
+                    } else {
+                        Toast.makeText(getActivity(), "Add an image first", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(getActivity(), "Add an image first", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Title must be non-empty and unique",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -488,23 +489,19 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case externalStoragePermissionRequestCode: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED&& grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getActivity(), "Thank you for permission", Toast.LENGTH_SHORT).show();
+                    // permission was granted, yay!
+                    buildGoogleApiClient();
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    Log.d(TAG, "permission really granted");
                 } else {
-                    Log.d(TAG, "permission really denied");
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-            }
+                    Toast.makeText(getActivity(), "You both permissions to use this app", Toast.LENGTH_SHORT).show();
+                    getActivity().onBackPressed();
+                    // permission denied, boo!
 
-            // other 'case' lines to check for other
-            // permissions this app might request
+                }
+                break;
         }
     }
 
@@ -556,6 +553,7 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
     }
 
     protected GoogleApiClient googleApiClient;
+
     protected synchronized void buildGoogleApiClient() {
         googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
@@ -564,6 +562,7 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
                 .build();
         googleApiClient.connect();
     }
+
     @Override
     public void onConnected(Bundle bundle) {
         requestLastLocation();
@@ -618,19 +617,18 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, this);
-        Toast.makeText(getActivity(), "starting updates", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Location will be stored with this climb", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (googleApiClient != null) {
-            googleApiClient.connect();
-        }
+        if (googleApiClient != null) googleApiClient.connect();
     }
+
     @Override
     public void onStop() {
-        googleApiClient.disconnect();
+        if (googleApiClient != null) googleApiClient.disconnect();
         super.onStop();
     }
 }

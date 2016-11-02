@@ -146,6 +146,15 @@ public class ClimbDataBaseHandler extends SQLiteOpenHelper {
         return image;
     }
 
+    public boolean isUnique(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery = "SELECT " + KEY_NAME +" FROM " + TABLE_CLIMBS + " WHERE " + KEY_NAME + "=\'" + name + "\'";
+        Log.d(null, " select query " + selectQuery);
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        return  cursor.getCount() == 0;
+
+    }
+
 
     //Update
     public void updateClimb(String name, String grade, String length, String desc) {

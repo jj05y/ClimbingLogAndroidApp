@@ -62,7 +62,7 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
                 fab.setImageResource(R.drawable.duck);
         }
         nameEditTextpref.setSummary(nameEditTextpref.getText());
-        descEditTextpref.setSummary(nameEditTextpref.getText());
+        descEditTextpref.setSummary(descEditTextpref.getText());
 
 
     }

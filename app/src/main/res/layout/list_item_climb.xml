@@ -8,9 +8,10 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         app:srcCompat="@android:drawable/star_big_on"
-        android:id="@+id/imageView_climb" />
+        android:id="@+id/imageView_climb"
+        android:layout_gravity="center"/>
 
     <TextView
         android:text="TextView"
