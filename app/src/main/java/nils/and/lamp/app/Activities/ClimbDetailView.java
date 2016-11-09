@@ -87,6 +87,7 @@ public class ClimbDetailView extends AppCompatActivity {
         Button delete = (Button) findViewById(R.id.detailview_delete_button);
         Button showOnMap = (Button) findViewById(R.id.detailview_go_gps_button);
 
+
         commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,15 +113,16 @@ public class ClimbDetailView extends AppCompatActivity {
         showOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (climb.getGpsCoords() != null) {
+                Log.d("GPSCORDS", "coords are" + climb.getGpsCoords());
+                if (climb.getGpsCoords().equals("9999.9,9999.9")) {
+                    Toast.makeText(context, "No Coords For This climb",Toast.LENGTH_SHORT).show();
+                }else{
                     Uri gmmIntentUri = Uri.parse("geo:" + climb.getGpsCoords() + "?q=" + climb.getGpsCoords());
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     if (mapIntent.resolveActivity(getPackageManager()) != null) {
                         startActivity(mapIntent);
                     }
-                } else {
-                    Toast.makeText(context, "No Coordinatess For This Climb :(", Toast.LENGTH_SHORT).show();
                 }
             }
         });

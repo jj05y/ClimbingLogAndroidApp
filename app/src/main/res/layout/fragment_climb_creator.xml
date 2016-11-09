@@ -125,13 +125,49 @@
                     tools:text="@string/log_desc" />
             </android.support.v7.widget.LinearLayoutCompat>
 
+            <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/createlog_container_gps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/createlog_container_desc">
 
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/createlog_latitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/md_keylines"
+                    android:layout_marginLeft="@dimen/md_keylines"
+                    android:layout_marginRight="@dimen/md_keylines"
+                    android:layout_marginTop="@dimen/md_keylines"
+                    android:ellipsize="end"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="@dimen/article_subheading"
+                    android:layout_weight="1"
+                    android:hint="Latitude"/>
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/createlog_longitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/md_keylines"
+                    android:layout_marginLeft="@dimen/md_keylines"
+                    android:layout_marginRight="@dimen/md_keylines"
+                    android:layout_marginTop="@dimen/md_keylines"
+                    android:ellipsize="end"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="@dimen/article_subheading"
+                    android:layout_weight="1"
+                    android:hint="Longitude"/>
+            </android.support.v7.widget.LinearLayoutCompat>
             <Button
                 android:id="@+id/createlog_commit_button"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/createlog_container_desc"
+                android:layout_below="@id/createlog_container_gps"
                 android:text="@string/button_text_commit"
                 android:textColor="?attr/colorPrimary" />
 
@@ -140,9 +176,18 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/createlog_container_desc"
+                android:layout_below="@id/createlog_container_gps"
                 android:layout_toRightOf="@id/createlog_commit_button"
                 android:text="@string/button_text_reset"
+                android:textColor="?attr/colorAccent" />
+            <Button
+                android:id="@+id/createlog_gps_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/createlog_container_gps"
+                android:layout_toRightOf="@id/createlog_reset_button"
+                android:text="@string/button_text_gps"
                 android:textColor="?attr/colorAccent" />
         </RelativeLayout>
     </ScrollView>

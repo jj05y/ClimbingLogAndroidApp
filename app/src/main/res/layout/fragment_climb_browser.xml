@@ -1,13 +1,47 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nils.and.lamp.app.Fragments.ClimbBrowser">
+    tools:context="nils.and.lamp.app.Fragments.ClimbBrowser"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/sort_button_az"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_az"
+            android:textColor="?attr/colorAccent"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/sort_button_grade"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_sort_grade"
+            android:textColor="?attr/colorAccent"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/sort_button_length"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_sort_length"
+            android:textColor="?attr/colorAccent"
+            android:layout_weight="1" />
 
 
+    </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/listview_climbs" />
-</FrameLayout>
+</LinearLayout>

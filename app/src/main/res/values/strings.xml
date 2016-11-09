@@ -46,6 +46,11 @@
     <string name="default_length">~10m</string>
     <string name="dialog_title_select_default_name">Default Climb Name</string>
     <string name="dialog_title_select_default_desc">Default Description</string>
+    <string name="button_az">A-Z</string>
+    <string name="button_sort_grade">Grade</string>
+    <string name="button_sort_length">Length</string>
+    <string name="sort_by">Sort by:</string>
+    <string name="button_text_gps">Grab GPS</string>
 
 
 </resources>

@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -73,7 +74,7 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    public static final double NO_COORDS = 9999.9;
+    private static final double NO_COORDS = 9999.9;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -108,6 +109,8 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
     private static final String TAG = "CreateLog";
     private Bitmap imageBitmap;
     private File photoFile; // the file (hope it's neces)
+    private EditText latitudeEdit;
+    private EditText longitudeEdit;
 
     public ClimbCreator() {
         // Required empty public constructor
@@ -295,7 +298,9 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
                         String desc = editDesc.getText().toString();
                         String g = grade.getSelectedItem().toString();
                         String l = length.getSelectedItem().toString();
-                        String coords = (latitude != NO_COORDS && longitude != NO_COORDS) ? latitude + "," + longitude : null;
+                        String lat = (latitudeEdit.getText().toString().equals("")? NO_COORDS +"": latitudeEdit.getText().toString());
+                        String lon = (longitudeEdit.getText().toString().equals("")? NO_COORDS +"": longitudeEdit.getText().toString());
+                        String coords = (latitude != NO_COORDS && longitude != NO_COORDS) ? lat + "," + lon : null;
                         database.addClimb(title, g, l, desc, imageBitmap, coords);
                         Toast.makeText(getContext(), "climb log added to database", Toast.LENGTH_SHORT).show();
                         // this is to prevent double tap commit to overload DB
@@ -307,6 +312,18 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
                 } else {
                     Toast.makeText(getActivity(), "Title must be non-empty and unique",Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        latitudeEdit = (EditText) rootView.findViewById(R.id.createlog_latitude);
+        longitudeEdit = (EditText) rootView.findViewById(R.id.createlog_longitude);
+
+        Button grabGPS = (Button) rootView.findViewById(R.id.createlog_gps_button);
+        grabGPS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                latitudeEdit.setText(latitude+"");
+                longitudeEdit.setText(longitude+"");
             }
         });
 
@@ -622,7 +639,6 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, this);
-        Toast.makeText(getActivity(), "Location will be stored with this climb", Toast.LENGTH_SHORT).show();
     }
 
     @Override

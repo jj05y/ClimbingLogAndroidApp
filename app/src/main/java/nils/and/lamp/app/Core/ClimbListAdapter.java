@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.List;
 import java.util.Vector;
 
 import nils.and.lamp.app.Core.Climb;

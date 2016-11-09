@@ -2,8 +2,10 @@ package nils.and.lamp.app.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,8 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import java.util.List;
 import java.util.Vector;
 
 import nils.and.lamp.app.Activities.ClimbDetailView;
@@ -27,6 +32,8 @@ public class ClimbBrowser extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private ListView climbsList;
+    private ClimbDataBaseHandler database;
+    private Vector<Climb> climbs;
 
     public ClimbBrowser() {
         // Required empty public constructor
@@ -46,22 +53,35 @@ public class ClimbBrowser extends Fragment {
         Log.d("FRAG", "create");
         climbsList = (ListView) rootView.findViewById(R.id.listview_climbs);
 
+        climbs = null;
+        database = new ClimbDataBaseHandler(getActivity());
+ //       (new ClimbLoader()).execute();
 
-        Vector<Climb> climbs = (new ClimbDataBaseHandler(getActivity())).getClimbs();
+        Button sortAZ = (Button) rootView.findViewById(R.id.sort_button_az);
+        Button sortGrade = (Button) rootView.findViewById(R.id.sort_button_grade);
+        Button sortLength = (Button) rootView.findViewById(R.id.sort_button_length);
 
-
-        Log.d("FRAG", climbsList +"");
-        climbsList.setAdapter(new ClimbListAdapter(climbs, getActivity()));
-        climbsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        sortAZ.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Climb climb = ((ClimbListAdapter) adapterView.getAdapter()).getClimbs().get(i);
-                Log.d("FRAG", climb.getName() );
-                Intent intent = new Intent(getActivity(), ClimbDetailView.class);
-                intent.putExtra("Climb", climb);
-                startActivity(intent);
+            public void onClick(View view) {
+                if (climbs != null) (new ClimbSorter()).execute("az");
             }
         });
+        sortGrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (climbs != null) (new ClimbSorter()).execute("grade");
+            }
+        });
+        sortLength.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (climbs != null) (new ClimbSorter()).execute("length");
+            }
+        });
+
+
+
 
         return rootView;
     }
@@ -82,12 +102,7 @@ public class ClimbBrowser extends Fragment {
     @Override
     public void onResume() {
         Log.d("FRAG", "RRREEESSSUUMMMEEE");
-        Vector<Climb> climbs = (new ClimbDataBaseHandler(getActivity())).getClimbs();
-        if (climbsList != null) {
-            ((ClimbListAdapter)climbsList.getAdapter()).getClimbs().clear();
-            ((ClimbListAdapter)climbsList.getAdapter()).getClimbs().addAll(climbs);
-            ((ClimbListAdapter)climbsList.getAdapter()).notifyDataSetChanged();
-        }
+        (new ClimbLoader()).execute();
         super.onResume();
         getView().setBackgroundColor(Color.WHITE);
 
@@ -112,4 +127,78 @@ public class ClimbBrowser extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
+    private class ClimbLoader extends AsyncTask<Void,Void,Void> {
+
+        @Override
+        protected Void doInBackground(Void... v) {
+            climbs = database.getClimbs();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Log.d("FRAG", climbsList +"");
+            climbsList.setAdapter(new ClimbListAdapter(climbs, getActivity()));
+            climbsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Climb climb = ((ClimbListAdapter) adapterView.getAdapter()).getClimbs().get(i);
+                    Log.d("FRAG", climb.getName() );
+                    Intent intent = new Intent(getActivity(), ClimbDetailView.class);
+                    intent.putExtra("Climb", climb);
+                    startActivity(intent);
+                }
+            });
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private class ClimbSorter extends AsyncTask<String,Void,Void> {
+
+        @Override
+        protected Void doInBackground(String... what) {
+            Vector<Climb> sorted = new Vector<>();
+            while (!climbs.isEmpty()) {
+                int indexOfMin = 0;
+                for (int i = 0; i < climbs.size(); i++) {
+                    switch (what[0]) {
+                        case "az":
+                            if (climbs.get(indexOfMin).getName().compareTo(climbs.get(i).getName()) > 0)
+                                indexOfMin = i;
+                            break;
+                        case "grade":
+                            if (climbs.get(indexOfMin).getGrade().compareTo(climbs.get(i).getGrade()) > 0)
+                                indexOfMin = i;
+                            break;
+                        case "length":
+                            if (climbs.get(indexOfMin).getLength().compareTo(climbs.get(i).getLength()) > 0)
+                                indexOfMin = i;
+                            break;
+                    }
+                }
+                sorted.add(climbs.remove(indexOfMin));
+            }
+            climbs = sorted;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Log.d("FRAG", climbsList +"");
+            climbsList.setAdapter(new ClimbListAdapter(climbs, getActivity()));
+            climbsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Climb climb = ((ClimbListAdapter) adapterView.getAdapter()).getClimbs().get(i);
+                    Log.d("FRAG", climb.getName() );
+                    Intent intent = new Intent(getActivity(), ClimbDetailView.class);
+                    intent.putExtra("Climb", climb);
+                    startActivity(intent);
+                }
+            });
+            super.onPostExecute(aVoid);
+        }
+    }
+
 }
