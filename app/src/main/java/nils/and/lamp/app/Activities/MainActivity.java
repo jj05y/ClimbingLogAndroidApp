@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,16 +30,22 @@ import java.util.Random;
 import nils.and.lamp.app.Core.ClimbDataBaseHandler;
 import nils.and.lamp.app.Fragments.ClimbBrowser;
 import nils.and.lamp.app.Fragments.ClimbCreator;
+import nils.and.lamp.app.Fragments.ClimbsOnAMap;
 import nils.and.lamp.app.Fragments.PrefsFragment;
-import nils.and.lamp.app.Fragments.TestGps;
 import nils.and.lamp.app.R;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ClimbBrowser.OnFragmentInteractionListener, ClimbCreator.OnFragmentInteractionListener, TestGps.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ClimbBrowser.OnFragmentInteractionListener, ClimbCreator.OnFragmentInteractionListener, ClimbsOnAMap.OnFragmentInteractionListener {
 
+    public static final String ON_A_MAP = "onamap";
+    public static final String NO_FRAG = "nofrag";
+    public static final String CREATE = "create";
+    public static final String BROWSE = "browse";
     private ClimbDataBaseHandler dataBaseHandler;
     private Context context;
     private FloatingActionButton fab;
+    private String currentFrag;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,11 +119,11 @@ public class MainActivity extends AppCompatActivity
                     Bitmap climb1 = BitmapFactory.decodeResource(getResources(), R.drawable.climb1);
                     Bitmap climb3 = BitmapFactory.decodeResource(getResources(), R.drawable.climb3);
 
-                    dataBaseHandler.addClimb("Street Fighter", "4c", "~10m","fab", climb1, "53.2713,-6.1074");
-                    dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "~20m","super fab",climb3,"53.2713,-6.1074");
-                    dataBaseHandler.addClimb("Graham Crackers", "5a", "~25m","super fab",climb3,"53.2713,-6.1074");
-                    dataBaseHandler.addClimb("Paradise Lost", "4a", "~20m","super super fab",climb1,"53.2713,-6.1074");
-                    dataBaseHandler.addClimb("Stereo-Tentacles", "5a", "~15m","super super super fab",climb3,"53.2713,-6.1074");
+                    dataBaseHandler.addClimb("Street Fighter", "4c", "~10m","fab", climb1, "53.2713,-6.1075");
+                    dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "~20m","super fab",climb3,"53.2713,-6.1072");
+                    dataBaseHandler.addClimb("Graham Crackers", "5a", "~25m","super fab",climb3,"53.2714,-6.1074");
+                    dataBaseHandler.addClimb("Paradise Lost", "4a", "~20m","super super fab",climb1,"53.2712,-6.1074");
+                    dataBaseHandler.addClimb("Stereo-Tentacles", "5a", "~15m","super super super fab",climb3,"53.2712,-6.1075");
                     Log.d("DB", "added some climbs");
                     //Toast.makeText(context, "Finished loading climbs", Toast.LENGTH_SHORT).show();
                 }
@@ -124,8 +131,9 @@ public class MainActivity extends AppCompatActivity
         }).start();
 
 
+        currentFrag = NO_FRAG;
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.openDrawer(Gravity.LEFT);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -186,28 +194,32 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (id == R.id.nav_browse) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_frag, new ClimbBrowser())
-                    .commit();
+            if (!(currentFrag.equals(BROWSE)) ) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_frag, new ClimbBrowser())
+                        .commit();
 
-            setTitle("Browse Climbs");
+                setTitle("Browse Climbs");
+                currentFrag = BROWSE;
+            }
         } else if (id == R.id.nav_create) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_frag, new ClimbCreator())
-                    .commit();
+            if (!(currentFrag.equals(CREATE)) ) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_frag, new ClimbCreator())
+                        .commit();
 
-               setTitle("Climb Creator");
-        } else if (id == R.id.nav_search) {
-            Toast.makeText(this, "Retrieving Online Database", Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, "Na, Just Kidding", Toast.LENGTH_SHORT).show();
-
-            setTitle("Browse Online");
-        } else if (id == R.id.nav_gps) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_frag, new TestGps())
-                    .commit();
-
-            setTitle("PANTS");
+                setTitle("Climb Creator");
+                currentFrag = CREATE;
+            }
+        } else if (id == R.id.nav_climbs_on_map) {
+            Fragment f = getSupportFragmentManager().findFragmentById(R.id.frame_frag);
+            if (!(currentFrag.equals(ON_A_MAP)) ) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_frag, new ClimbsOnAMap())
+                        .commit();
+                setTitle("Map View");
+                currentFrag = ON_A_MAP;
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

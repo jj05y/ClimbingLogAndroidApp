@@ -274,6 +274,9 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
         grade.setSelection(gradeAdapter.getPosition(prefs.getString("default_grade", "4a")));
         length.setSelection(lengthAdapter.getPosition(prefs.getString("default_length", "~10m")));
 
+        latitudeEdit = (EditText) rootView.findViewById(R.id.createlog_latitude);
+        longitudeEdit = (EditText) rootView.findViewById(R.id.createlog_longitude);
+
         // reset button
         resetAll = (Button) rootView.findViewById(R.id.createlog_reset_button);
         resetAll.setOnClickListener(new View.OnClickListener() {
@@ -284,6 +287,8 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
                 grade.setSelection(0);
                 length.setSelection(0);
                 imageContainer.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.placeholder));
+                latitudeEdit.setText("");
+                longitudeEdit.setText("");
             }
         });
 
@@ -315,8 +320,6 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
             }
         });
 
-        latitudeEdit = (EditText) rootView.findViewById(R.id.createlog_latitude);
-        longitudeEdit = (EditText) rootView.findViewById(R.id.createlog_longitude);
 
         Button grabGPS = (Button) rootView.findViewById(R.id.createlog_gps_button);
         grabGPS.setOnClickListener(new View.OnClickListener() {

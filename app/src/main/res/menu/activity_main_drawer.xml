@@ -11,13 +11,9 @@
             android:icon="@drawable/browse"
             android:title="Browse Climbs" />
         <item
-            android:id="@+id/nav_search"
-            android:icon="@drawable/search"
-            android:title="Search Climbs Online" />
-        <item
-        android:id="@+id/nav_gps"
-        android:icon="@drawable/search"
-        android:title="TestGPS" />
+        android:id="@+id/nav_climbs_on_map"
+        android:icon="@drawable/map"
+        android:title="View Climbs on Map" />
 
     </group>
 
