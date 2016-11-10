@@ -214,8 +214,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_climbs_on_map) {
             Fragment f = getSupportFragmentManager().findFragmentById(R.id.frame_frag);
             if (!(currentFrag.equals(ON_A_MAP)) ) {
+                ClimbsOnAMap coam = new ClimbsOnAMap();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.frame_frag, new ClimbsOnAMap())
+                        .replace(R.id.frame_frag, coam)
                         .commit();
                 setTitle("Map View");
                 currentFrag = ON_A_MAP;
