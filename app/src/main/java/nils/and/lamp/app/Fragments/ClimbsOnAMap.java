@@ -143,7 +143,7 @@ public class ClimbsOnAMap extends Fragment implements OnMapReadyCallback {
                 b.include(m.getPosition());
             }
             LatLngBounds bounds = b.build();
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 50,50,1);
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,100);
             map.animateCamera(cu);
             super.onPostExecute(aVoid);
         }

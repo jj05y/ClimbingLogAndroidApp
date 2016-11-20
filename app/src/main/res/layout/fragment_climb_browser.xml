@@ -39,6 +39,11 @@
 
 
     </LinearLayout>
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="5px"
+        android:background="@color/colorAccent" />
 
     <ListView
         android:layout_width="match_parent"

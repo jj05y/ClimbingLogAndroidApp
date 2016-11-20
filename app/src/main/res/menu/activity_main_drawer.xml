@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/g1"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_create"
             android:icon="@drawable/create"
             android:title="Create A Climb" />
+    </group>
+    <group
+        android:id="@+id/g2"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_browse"
             android:icon="@drawable/browse"
             android:title="Browse Climbs" />
+    </group>
+    <group
+        android:id="@+id/g3"
+        android:checkableBehavior="single">
         <item
-        android:id="@+id/nav_climbs_on_map"
-        android:icon="@drawable/map"
-        android:title="View Climbs on Map" />
-
+            android:id="@+id/nav_climbs_on_map"
+            android:icon="@drawable/map"
+            android:title="View Climbs on Map" />
     </group>
 
-<!--    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>-->
 
 </menu>

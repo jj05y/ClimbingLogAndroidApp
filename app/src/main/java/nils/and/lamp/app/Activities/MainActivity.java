@@ -116,14 +116,26 @@ public class MainActivity extends AppCompatActivity
                 }
                 if (dataBaseHandler.isEmpty()) {
                     //Toast.makeText(context, "Filling Database with pre-loaded climbs", Toast.LENGTH_SHORT).show();
-                    Bitmap climb1 = BitmapFactory.decodeResource(getResources(), R.drawable.climb1);
-                    Bitmap climb3 = BitmapFactory.decodeResource(getResources(), R.drawable.climb3);
 
-                    dataBaseHandler.addClimb("Street Fighter", "4c", "~10m","fab", climb1, "53.2713,-6.1075");
-                    dataBaseHandler.addClimb("Tower Ridge Direct", "5c", "~20m","super fab",climb3,"53.2713,-6.1072");
-                    dataBaseHandler.addClimb("Graham Crackers", "5a", "~25m","super fab",climb3,"53.2714,-6.1074");
-                    dataBaseHandler.addClimb("Paradise Lost", "4a", "~20m","super super fab",climb1,"53.2712,-6.1074");
-                    dataBaseHandler.addClimb("Stereo-Tentacles", "5a", "~15m","super super super fab",climb3,"53.2712,-6.1075");
+                    //Dalkey
+                    Bitmap dalkey1 = BitmapFactory.decodeResource(getResources(), R.drawable.dalkey1);
+                    Bitmap dalkey2 = BitmapFactory.decodeResource(getResources(), R.drawable.dalkey2);
+                    Bitmap dalkey3 = BitmapFactory.decodeResource(getResources(), R.drawable.dalkey3);
+                    Bitmap dalkey4 = BitmapFactory.decodeResource(getResources(), R.drawable.dalkey4);
+                    dataBaseHandler.addClimb("Street Fighter", "4c", "~10m","A dalkey classic, The last move has great protection", dalkey1, "53.2713,-6.1075");
+                    dataBaseHandler.addClimb("Tower Ridge", "4a", "~20m","A really fun climb for sunny afternoons. Bring flapjacks for snacks on the scaldy ledge",dalkey2,"53.2713,-6.1072");
+                    dataBaseHandler.addClimb("Graham Crackers", "5a", "~25m","Gets pretty dusty towards the top but the rewards are huge! 2 sets of nuts needed",dalkey3,"53.2714,-6.1074");
+                    dataBaseHandler.addClimb("Paradise Lost", "6c", "~20m","Really scary but a some bomber gear for protection.",dalkey4,"53.2712,-6.1074");
+                    //fairhead
+                    Bitmap fairhead1 = BitmapFactory.decodeResource(getResources(), R.drawable.fairhead1);
+                    Bitmap fairhead2 = BitmapFactory.decodeResource(getResources(), R.drawable.fairhead2);
+                    dataBaseHandler.addClimb("Muskat", "6c", "~35m","Really reachy route with minimal gear. Make sure to bring cams",fairhead1,"55.225663,-6.145032");
+                    dataBaseHandler.addClimb("Denver Dog", "6a", "~45m","Only entertain this if you've climbed shoeless before. It will literally knock your socks off",fairhead2,"55.226481,-6.149848");
+                    //burren
+                    Bitmap burren1 = BitmapFactory.decodeResource(getResources(), R.drawable.burren1);
+                    Bitmap burren2 = BitmapFactory.decodeResource(getResources(), R.drawable.burren2);
+                    dataBaseHandler.addClimb("Great Rock", "5b", "~20m","It's rocky's favourite climb apparently",burren1,"53.061225,-9.362760");
+                    dataBaseHandler.addClimb("Mossy Ledge", "6b", "~15m","Moss gets slippy in winter, really good gear placement",burren2,"53.061325,-9.362755");
                     Log.d("DB", "added some climbs");
                     //Toast.makeText(context, "Finished loading climbs", Toast.LENGTH_SHORT).show();
                 }

@@ -18,7 +18,7 @@ import java.util.Vector;
 public class ClimbDataBaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "DataBaseOfClimbs";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
 
     private static final String TABLE_CLIMBS = "ClimbsTable";
     private static final String TABLE_PICTURES = "PicturesTable";
