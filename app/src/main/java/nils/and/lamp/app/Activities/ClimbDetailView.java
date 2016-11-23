@@ -50,6 +50,7 @@ public class ClimbDetailView extends AppCompatActivity {
         setContentView(R.layout.activity_climb_detail_view);
 
         context = this;
+        setTitle("Climb Details");
 
 
         Intent intent = getIntent();

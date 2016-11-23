@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity
     public static final String NO_FRAG = "nofrag";
     public static final String CREATE = "create";
     public static final String BROWSE = "browse";
+    public static final String SETTINGS = "settings";
     private ClimbDataBaseHandler dataBaseHandler;
     private Context context;
     private FloatingActionButton fab;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        setTitle("LAMP Climbing");
         context = this;
         fab = (FloatingActionButton) findViewById(R.id.fab);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -188,10 +189,13 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.frame_frag, new PrefsFragment())
-                    .commit();
-            setTitle("Settings");
+            if (!(currentFrag.equals(SETTINGS)) ) {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.frame_frag, new PrefsFragment())
+                        .commit();
+                setTitle("Settings");
+                currentFrag = SETTINGS;
+            }
             return true;
         }
 

@@ -1,6 +1,7 @@
 package nils.and.lamp.app.Fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,6 +35,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -310,7 +312,10 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
                         Toast.makeText(getContext(), "climb log added to database", Toast.LENGTH_SHORT).show();
                         // this is to prevent double tap commit to overload DB
                         imageBitmap = null;
+                        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                         getActivity().onBackPressed();
+
                     } else {
                         Toast.makeText(getActivity(), "Add an image first", Toast.LENGTH_SHORT).show();
                     }
@@ -486,8 +491,13 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
                         new backgroundImageLoader(rootView).execute(LOAD_FROM_FILENAME);
                     } else {
                         Bundle extras = imageReturnedIntent.getExtras();
-                        imageBitmap = (Bitmap) extras.get("data");
-                        imageContainer.setImageBitmap(imageBitmap);
+                        if (extras != null) {
+                            imageBitmap = (Bitmap) extras.get("data");
+                            imageContainer.setImageBitmap(imageBitmap);
+
+                        } else {
+                            Toast.makeText(getActivity(), "Incompatible Camera, please select from gallery", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
                 break;
@@ -607,7 +617,6 @@ public class ClimbCreator extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onLocationChanged(Location location) {
         Log.d("loc", "Location Changed");
-        System.out.println("lols");
 
         requestLastLocation();
         latitude = mLastLocation.getLatitude();
