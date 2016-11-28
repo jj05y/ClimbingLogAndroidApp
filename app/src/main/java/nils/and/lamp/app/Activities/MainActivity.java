@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("LAMP Climbing");
+        setTitle("Clog: The Climbing Log");
         context = this;
         fab = (FloatingActionButton) findViewById(R.id.fab);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
